@@ -39,7 +39,7 @@ class View_Smarty extends \View
 		}
 	}
 
-	public $extension = 'smarty';
+	public $extension = 'tpl';
 
 	/**
 	 * Returns the Parser lib object
@@ -75,6 +75,18 @@ class View_Smarty extends \View
 		static::$_parser->default_modifiers = \Config::get('parser.View_Smarty.environment.default_modifiers', array());
 
 		return static::$_parser;
+	}
+	
+	/**
+	 * 遷移先のテンプレート名を取得します（マリエッタ追加）
+	 * @return type
+	 */
+	public function tplname()
+	{
+		$tmp = explode("app" . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR, $this->file_name);
+		$tmp = str_replace(".tpl", "", $tmp[1]);
+		$tmp = str_replace(DIRECTORY_SEPARATOR, "/", $tmp);
+		return $tmp;
 	}
 }
 
