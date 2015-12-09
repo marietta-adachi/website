@@ -36,14 +36,8 @@
 		{/literal}
 
 		<input type="hidden" id="message" value="{$info|default:''}"/>{* 更新後のメッセージ表示用 *}
-		{* メタ内容確認 *}
-		{if Config::get("site.display_meta")}
-			<font size="1">
-				title：　{$title}<br/>
-				description：　{$description}<br/>
-				keywords：　{$keywords}<br/>
-				h1：　{$h1|default:""}<br/>
-			</font>
+		{if Config::get("site.meta.display")}
+			<font size="1">title：　{$title}<br/>description：　{$description}<br/>keywords：　{$keywords}<br/>h1：　{$h1|default:""}<br/></font>
 		{/if}
 
 		<header>

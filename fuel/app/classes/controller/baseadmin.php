@@ -1,8 +1,5 @@
 <?php
 
-/**
- * 管理サイト用基本コントローラ
- */
 class Controller_Baseadmin extends Controller_Base
 {
 
@@ -10,12 +7,15 @@ class Controller_Baseadmin extends Controller_Base
 
     public function before()
     {
-	parent::before('admin');
+	parent::before();
+	$this->pre('admin');
     }
 
     public function after($response)
     {
-	return parent::after($response, 'admin');
+	parent::after($response, 'admin');
+	$this->post('admin');
+	return $response;
     }
 
     protected function is_login()

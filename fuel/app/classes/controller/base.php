@@ -3,21 +3,19 @@
 class Controller_Base extends Controller_Template
 {
 
-    protected $_errors = [];
-    protected $_action = '';
-    protected $_screen = '';
     protected $_custom_title = '';
     protected $_custom_keyword = [[], 0];
     protected $_custom_description = '';
-    protected $_h1 = '';
     protected $_breadcrumb = [];
+    protected $_h1 = '';
+    protected $_errors = [];
 
     public function pre($type)
     {
 	Config::load('base');
 
-	$this->_action = $this->action_name();
-	$this->debug_param();
+	$action = strtolower(str_replace('Controller_', '', $this->request->controller.'_'.$this->request->action));
+	$this->debug_param($action);
 
 
 	$tmp = Config::get($type.'.ssl');
@@ -26,16 +24,16 @@ class Controller_Base extends Controller_Template
 	    $ssl = false;
 	    if (array_key_exists('on', $tmp))
 	    {
-		$ssl = in_array($this->_action, $tmp['on']);
+		$ssl = in_array($action, $tmp['on']);
 	    }
 	    else
 	    {
-		$ssl = !in_array($this->_action, $tmp['off']);
+		$ssl = !in_array($action, $tmp['off']);
 	    }
 	    if ($ssl)
 	    {
 		$url = Uri::create(Input::uri(), [], [], true);
-		Log::info('http2https：'.$url);
+		Log::info('HTTPS Redirect : '.$url);
 		return Response::redirect($url);
 	    }
 	}
@@ -44,33 +42,34 @@ class Controller_Base extends Controller_Template
 	    $http = false;
 	    if (array_key_exists('on', $tmp))
 	    {
-		$http = !in_array($this->_action, $tmp['on']);
+		$http = !in_array($action, $tmp['on']);
 	    }
 	    else
 	    {
-		$http = in_array($this->_action, $tmp['off']);
+		$http = in_array($action, $tmp['off']);
 	    }
 	    if ($http)
 	    {
 		$url = Uri::create(Input::uri(), [], [], false);
-		Log::info('https2http：'.$url);
+		Log::info('HTTP Redirect : '.$url);
 		return Response::redirect($url);
 	    }
 	}
 
+	// authentication
 	$no_auth_action = Config::get($type.'.auth');
 	$path = ($type == 'site') ? '' : $type;
 	if ($this->is_login())
 	{
 	    $act = array_diff($no_auth_action, $both_auth_action);
-	    if (in_array($this->_action, $act))
+	    if (in_array($action, $act))
 	    {
 		return Response::redirect($path);
 	    }
 	}
 	else
 	{
-	    if (!in_array($this->_action, $no_auth_action))
+	    if (!in_array($action, $no_auth_action))
 	    {
 		return Response::redirect($path.'/auth');
 	    }
@@ -80,19 +79,22 @@ class Controller_Base extends Controller_Template
     public function post($type)
     {
 	// screen
-	$view = $this->template->content;
-	$screen = $view->tplname();
-	Log::info($screen);
-	$sInfo = Config::get($type.'.screen_info');
-	$this->template->set_global('screen', str_replace('/', '-', $screen));
-	$this->template->set_global('title', $this->get_title($screen, $this->_custom_title, $type));
-	$this->template->set_global('keywords', $this->get_keywords($screen, $this->_custom_keyword, $type));
-	$this->template->set_global('description', $this->get_description($screen, $this->_custom_description, $type));
-	$this->template->set_global('screentitle', @$sInfo[$screen][0]);
-	$this->template->set_safe('breadcrumb', $this->get_breadcrumb(@$sInfo[$screen][0]));
+	$tplname = $this->template->content->tplname();
+	Log::info($tplname);
+	$meta = Config::get($type.'.meta');
+
+	$this->set_assets($tplname);
+
+	// TDHK
+	$this->set_title($meta, $tplname);
+	$this->set_keywords($meta, $tplname);
+	$this->set_description($meta, $tplname);
+	$this->set_breadcrumb(@$meta['screens'][$tplname][0]);
 	$this->template->set_safe('h1', $this->_h1);
+
+	$this->template->set_global('screen', str_replace('/', '-', $tplname));
+	$this->template->set_global('screentitle', @$meta['screens'][$tplname][0]);
 	$this->template->set_global('status_code', $this->response_status);
-	$this->set_assets($screen);
 
 	// error
 	$this->template->set_global('errors', $this->_errors);
@@ -105,47 +107,33 @@ class Controller_Base extends Controller_Template
 	$this->template->set_global('user', $this->get_user());
     }
 
-    public function after($response)
+    public function set_title($meta, $tplname)
     {
-	if (false)
-	{
-	    // キャッシュさせない（ブラウザバックなどでリロードさせたい場合があるため）
-	    $response->set_header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate');
-	    $response->set_header('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-	    $response->set_header('Pragma', 'no-cache');
-	}
-	return $response;
-    }
-
-    public function get_title($screen, $custom_title, $site = 'site')
-    {
-	$sInfo = Config::get($site.'.screen_info');
-	if (!array_key_exists($screen, $sInfo))
+	if (!array_key_exists($tplname, $meta['screens']))
 	{
 	    return '';
 	}
 
-	$tmp = $sInfo[$screen];
-	$tmp = $custom_title.$tmp[0];
-	$commonTitle = Config::get($site.'.common_title');
-	$siteName = empty($tmp) ? $commonTitle : (empty($commonTitle) ? '' : '｜'.$commonTitle);
+	$tmp = $meta['screens'][$tplname];
+	$tmp = $this->_custom_title.$tmp[0];
+	$title = $meta['title'];
+	$siteName = empty($tmp) ? $title : (empty($title) ? '' : '｜'.$title);
 	$tmp = $tmp.$siteName;
-	return $tmp;
+	$this->template->set_global('title', $tmp);
     }
 
-    public function get_keywords($screen, $custom_keyword, $site = 'site')
+    public function set_keywords($meta, $tplname)
     {
-	$sInfo = Config::get($site.'.screen_info');
-	if (!array_key_exists($screen, $sInfo))
+	if (!array_key_exists($tplname, $meta['screens']))
 	{
 	    return '';
 	}
 
 	// 共通キーワード追加
-	$keywords = Config::get($site.'.common_keywords');
+	$keywords = $meta['keywords'];
 
 	// 画面毎のキーワード追加
-	$tmp = $sInfo[$screen];
+	$tmp = $meta['screens'][$tplname];
 	$idx = count($keywords);
 	if (is_numeric($tmp[1][0]))
 	{
@@ -154,29 +142,28 @@ class Controller_Base extends Controller_Template
 	array_splice($keywords, $idx, null, $tmp[1][1]);
 
 	// 動的キーワード追加
-	$addKeys = $custom_keyword[0];
-	if (count($addKeys) > 0)
+	$add_keys = $this->_custom_keyword[0];
+	if (count($add_keys) > 0)
 	{
-	    array_splice($keywords, $custom_keyword[1], null, $addKeys);
+	    array_splice($keywords, $this->_custom_keyword[1], null, $add_keys);
 	}
 
-	return implode(',', $keywords);
+	$tmp = implode(',', $keywords);
+	$this->template->set_global('keywords', $tmp);
     }
 
-    public function get_description($screen, $custom_description, $site = 'site')
+    public function set_description($meta, $tplname)
     {
-	$sInfo = Config::get($site.'.screen_info');
-	if (!array_key_exists($screen, $sInfo))
+	if (!array_key_exists($tplname, $meta['screens']))
 	{
 	    return '';
 	}
-
-	$tmp = $sInfo[$screen];
-	$tmp = $custom_description.$tmp[2].Config::get($site.'.common_description');
-	return $tmp;
+	$tmp = $meta['screens'][$tplname];
+	$tmp = $this->_custom_description.$tmp[2].$meta['description'];
+	$this->template->set_global('description', $tmp);
     }
 
-    protected function get_breadcrumb($title)
+    protected function set_breadcrumb($title)
     {
 	/*
 	  sample
@@ -241,24 +228,24 @@ class Controller_Base extends Controller_Template
 		.'</li>'
 		.'</ol>';
 
-	return $html;
+	$this->template->set_safe('breadcrumb', $html);
     }
 
-    protected function set_assets($screen)
+    protected function set_assets($tplname)
     {
 	//Log::info('screen：' . $screen);
-	if (Asset::find_file($screen.'.css', 'css'))
+	if (Asset::find_file($tplname.'.css', 'css'))
 	{
-	    $this->template->set_safe('page_css', Asset::css($screen.'.css'));
+	    $this->template->set_safe('page_css', Asset::css($tplname.'.css'));
 	}
 	else
 	{
 	    $this->template->set_safe('page_css', '');
 	}
 
-	if (Asset::find_file($screen.'.js', 'js'))
+	if (Asset::find_file($tplname.'.js', 'js'))
 	{
-	    $this->template->set_safe('page_js', Asset::js($screen.'.js'));
+	    $this->template->set_safe('page_js', Asset::js($tplname.'.js'));
 	}
 	else
 	{
@@ -433,9 +420,9 @@ class Controller_Base extends Controller_Template
 	return $ret;
     }
 
-    protected function debug_param()
+    protected function debug_param($action)
     {
-	Log::info('ACTION：'.$this->_action);
+	Log::info('ACTION：'.$action);
 	foreach (Input::all() as $k => $v)
 	{
 	    if (is_array($v))
@@ -456,11 +443,6 @@ class Controller_Base extends Controller_Template
 	{
 	    Log::info($k.'：'.$v);
 	}
-    }
-
-    public function action_name()
-    {
-	return strtolower(str_replace('Controller_', '', $this->request->controller.'_'.$this->request->action));
     }
 
 }
