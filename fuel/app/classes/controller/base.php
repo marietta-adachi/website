@@ -253,12 +253,30 @@ class Controller_Base extends Controller_Template
 	}
     }
 
-    protected function set_info($msg)
+    protected function is_post()
     {
-	$this->template->set_global('info', $msg);
+	return (Input::method() == 'POST');
     }
 
-    protected function set_error($obj, $through = false)
+    protected function check()
+    {
+	if (!Security::check_token())
+	{
+	    Common::error(new Exception('CSRF Error'));
+	    return Response::redirect('/');
+	}
+
+	//$val = $form->validation();
+	$val = $this->get_form()->validation();
+	if (!$val->run())
+	{
+	    $this->set_error($val);
+	    return false;
+	}
+	return $val->validated();
+    }
+
+    protected function set_error($obj)
     {
 	if ($obj instanceof Validation)
 	{
@@ -278,45 +296,11 @@ class Controller_Base extends Controller_Template
 	{
 	    $this->_errors['other'] = $obj;
 	}
-
-	if (!$through)
-	{
-	    throw new Exception();
-	}
     }
 
-    protected function check_error()
+    protected function set_info($msg)
     {
-	if (count($this->_errors) > 0)
-	{
-	    throw new Exception();
-	}
-    }
-
-    protected function check_csrf($token = null)
-    {
-	if (!Security::check_token($token))
-	{
-	    Common::error(new Exception('CSRF Error'));
-	    return Response::redirect('/');
-	}
-    }
-
-    protected function error($e, $redirect = '/')
-    {
-	$msg = $e->getMessage();
-	if (!empty($msg))
-	{
-	    Common::error($e);
-
-	    // サーバエラーを発生し、トップへ
-	    //throw new HttpServerErrorException;
-	    return Response::redirect($redirect);
-	}
-	else
-	{
-	    // フォームのバリデーションエラーなので何もしない
-	}
+	$this->template->set_global('info', $msg);
     }
 
     protected function init_condition($key, $value = [])
@@ -385,7 +369,6 @@ class Controller_Base extends Controller_Template
     {
 	try
 	{
-	    // アップロード処理
 	    Upload::process($config);
 	}
 	catch (Exception $e)
@@ -393,7 +376,6 @@ class Controller_Base extends Controller_Template
 	    return null; // 未ログイン = アップロードなし = なにもしない
 	}
 
-	// バリデーションチェック
 	if (!Upload::is_valid())
 	{
 	    $files = Upload::get_errors();
@@ -403,7 +385,7 @@ class Controller_Base extends Controller_Template
 		{
 		    if ($e['error'] == 4)
 		    {
-			// アップロードしてない場合はスルー
+			// no upload
 			continue;
 		    }
 		    else
@@ -416,8 +398,7 @@ class Controller_Base extends Controller_Template
 	    $this->checkError();
 	}
 
-	$ret = Upload::get_files();
-	return $ret;
+	return Upload::get_files();
     }
 
     protected function debug_param($action)
