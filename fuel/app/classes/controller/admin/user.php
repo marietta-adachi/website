@@ -55,7 +55,7 @@ class Controller_Admin_User extends Controller_Baseadmin
 	return $form;
     }
 
-    public function action_edit($mode = EditMode::ADD, $id = null)
+    public function action_edit()
     {
 	if ($this->is_post())
 	{
@@ -63,20 +63,16 @@ class Controller_Admin_User extends Controller_Baseadmin
 	}
 	else
 	{
-	    $d['mode'] = $mode;
-	    if ($mode == EditMode::MOD)
+	    $d = Input::get();
+	    if ($d['mode'] == EditMode::MOD)
 	    {
-		$user = Model_Db_User::find_by_pk($id);
+		$user = Model_Db_User::find_by_pk($d['id']);
 		$d['id'] = $user->user_id;
 		$d['name'] = $user->user_name;
 		$d['address'] = $user->user_address;
 		$d['tel'] = $user->user_tel;
 		$d['email'] = $user->user_email;
 		$d['status'] = $user->user_status;
-	    }
-	    else
-	    {
-		
 	    }
 	}
 
@@ -86,15 +82,21 @@ class Controller_Admin_User extends Controller_Baseadmin
     public function action_confirm()
     {
 	$d = $this->check();
-	if (!$d)
-	{
-	    $this->action_edit();
-	    return;
-	}
 
 	if (false)
 	{
-	    $this->set_error(['mail_address' => 'このメールアドレスは既に使用されています']);
+	    $this->set_error(['email' => 'xxx']);
+	}
+	if (false)
+	{
+	    $this->set_error(['email' => 'xxx']);
+	}
+	if (false)
+	{
+	    $this->set_error(['email' => 'xxx']);
+	}
+	
+	if($this->has_error()){
 	    $this->action_edit();
 	    return;
 	}

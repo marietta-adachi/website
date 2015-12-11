@@ -1,8 +1,5 @@
 <?php
 
-/**
- * 共通ユーティリティクラス
- */
 class Common
 {
 
@@ -36,11 +33,6 @@ class Common
 	);
     }
 
-    /**
-     * CSVから配列に変換します（1行目がヘッダ行前提）
-     * @param type $data
-     * @return type
-     */
     public static function csv2arr($data, $enc = 'sjis-win', $ln = '\r\n')
     {
 	$data = mb_convert_encoding($data, 'utf8', $enc); // ハイフンが文字化けるためsjis-winで
@@ -56,43 +48,24 @@ class Common
 	return $csv;
     }
 
-    /**
-     * 文字列をBase64（URLセーフ）にエンコードします
-     * @param type $val
-     * @return type
-     */
     public static function base64_urlsafe_encode($val)
     {
 	$val = base64_encode($val);
 	return str_replace(array('+', '/', '='), array('_', '-', '.'), $val);
     }
 
-    /**
-     * Base64文字列（URLセーフ）をデコードします
-     * @param type $val
-     * @return type
-     */
     public static function base64_urlsafe_decode($val)
     {
 	$val = str_replace(array('_', '-', '.'), array('+', '/', '='), $val);
 	return base64_decode($val);
     }
 
-    /**
-     * Base64文字列（画像データ）をデコードします
-     * @param type $val
-     * @return type
-     */
     public static function base64_image_decode($val)
     {
 	$val = str_replace(array('_', '-', '.'), array('+', '/', '='), $val);
 	return base64_decode($val);
     }
 
-    /**
-     * システム日を取得します
-     * @return type
-     */
     public static function today()
     {
 	$baseDate = Config::get('base_date');
@@ -106,10 +79,6 @@ class Common
 	}
     }
 
-    /**
-     * システム日時を取得します
-     * @return type
-     */
     public static function now($adjust = '')
     {
 	$baseTime = Config::get('base_time');
@@ -131,10 +100,6 @@ class Common
 	}
     }
 
-    /**
-     * システムタイムスタンプを取得します
-     * @return type
-     */
     public static function nowTimestamp()
     {
 	$t = time();
@@ -144,12 +109,6 @@ class Common
 	return date('YmdHis', $t).$mt;
     }
 
-    /**
-     * メール送信を行います
-     * @param type $email
-     * @param type $bccAdmin
-     * @return boolean
-     */
     public static function sendmail($email, $bccAdmin = false)
     {
 	try
@@ -186,10 +145,6 @@ class Common
 	}
     }
 
-    /**
-     * エラー情報を出力します
-     * @param type $e
-     */
     public static function error($e)
     {
 	Log::error('* ▼ **********************************************************************');
@@ -200,11 +155,6 @@ class Common
 	Log::error('* ▲ ***********************************************************************');
     }
 
-    /**
-     * 郵便番号から住所（都道府県～町域）に変更します
-     * @param type $zipcode
-     * @return string
-     */
     public static function zipcode2address($zipcode)
     {
 	$zipcode = Model_Db_Mzipcode::find_by('m_zipcode_zipcode', $zipcode);
@@ -216,11 +166,6 @@ class Common
 	return $zipcode->m_zipcode_pref.' '.$zipcode->m_zipcode_city.' '.$zipcode->m_zipcode_town;
     }
 
-    /**
-     * 郵便番号から県コード、市区町村コード、町域コード（郵便番号）に変換します
-     * @param type $zipcode
-     * @return type
-     */
     public static function zipcode2eachcode($zipcode)
     {
 	$zipcode = Model_Db_Mzipcode::find_by('m_zipcode_zipcode', $zipcode);
@@ -246,118 +191,6 @@ class Common
 	return @$tmp[0];
     }
 
-    /**
-     * 選択料金プランコード（仮登録時）がフリープランか判定します
-     * @param type $selectedPlan
-     * @return type
-     */
-    public static function isFreePlan($selectedPlan)
-    {
-	$tmp = explode(Deli::PLAN, $selectedPlan);
-	return empty($tmp[1]);
-    }
-
-    /**
-     * 選択料金プランコード（仮登録時）を分解します
-     * @param type $selectedPlan
-     * @return type
-     */
-    public static function parseSelectedPlan($selectedPlan)
-    {
-	$tmp = explode(Deli::PLAN, $selectedPlan);
-	return array((int) $tmp[0], (int) @$tmp[1]);
-    }
-
-    /**
-     * 申込IDから注文番号に変換します
-     * @param type $applyId
-     * @return type
-     */
-    public static function applyId2orderNo($applyId)
-    {
-
-	return str_pad($applyId, 10, '0', STR_PAD_LEFT);
-    }
-
-    /**
-     * 注文番号から申込IDに変換します
-     * @param type $orderNo
-     * @return type
-     */
-    public static function orderNo2applyId($orderNo)
-    {
-	return intval($orderNo);
-    }
-
-    /**
-     * SNS IDより名称を取得します
-     * @param type $socialId
-     * @return type
-     */
-    public static function socialId2Name($socialId)
-    {
-	return @Social::$name[$socialId];
-    }
-
-    /**
-     * SNS IDよりメールアドレスのカラム名を取得します
-     * @param type $socialId
-     * @return string
-     */
-    public static function socialId2mailAddresColName($socialId)
-    {
-	if (empty($socialId))
-	{
-	    return 'm_member_mail_address';
-	}
-	else
-	{
-	    return 'm_member_'.Str::lower(Social::$name[$socialId]).'_mail_address';
-	}
-    }
-
-    /**
-     * SNS IDより識別子のカラム名を取得します
-     * @param type $socialId
-     * @return string
-     */
-    public static function socialId2idColName($socialId)
-    {
-	if (empty($socialId))
-	{
-	    return 'm_member_id';
-	}
-	else
-	{
-	    return 'm_member_'.Str::lower(Social::$name[$socialId]).'_id';
-	}
-    }
-
-    /**
-     * 会員レコードから登録中SNSを判定します（仮登録時に使用）
-     * @param type $member
-     * @return type
-     */
-    public static function member2socialId($member)
-    {
-	if (!empty($member->m_member_yahoo_id))
-	{
-	    return Social::YAHOO;
-	}
-	else if (!empty($member->m_member_facebook_id))
-	{
-	    return Social::FACEBOOK;
-	}
-	else if (!empty($member->m_member_google_id))
-	{
-	    return Social::GOOGLE;
-	}
-	else
-	{
-	    return null;
-	}
-    }
-
     public static function get_device($level = 1)
     {
 	\Fuel\Core\Autoloader::add_class('MobileDetect', APPPATH.'vendor/Mobile-Detect-2.8.17/Mobile_Detect.php');
@@ -380,23 +213,23 @@ class Common
 	}
     }
 
+    public static function decorate($head, $c = '*')
+    {
+	$ret = $c.' '.$head.' ';
+	//$remain = 100 - mb_strwidth($ret, mb_detect_encoding($ret));
+	$remain = 70 - mb_strwidth($ret);
+	for ($i = 0; $i < $remain; $i++)
+	{
+	    $ret .= $c;
+	}
+	return $ret;
+    }
+
 }
 
-/**
- * ページャ関連クラス
- */
 class Page
 {
 
-    /**
-     * ページネーションオブジェクトを取得します
-     * @param type $action
-     * @param type $count
-     * @param type $crrPage
-     * @param type $limit
-     * @param type $name
-     * @return type
-     */
     public static function getPage($action, $count, $crrPage, $limit = 100, $name = 'bootstrap3_ma')
     {
 	$config = array(
@@ -418,37 +251,8 @@ class Page
 
 }
 
-/**
- * バッチ処理関連クラス
- */
-class TaskUtil
-{
-
-    public static function decorate($head, $c = '*')
-    {
-	$ret = $c.' '.$head.' ';
-	//$remain = 100 - mb_strwidth($ret, mb_detect_encoding($ret));
-	$remain = 70 - mb_strwidth($ret);
-	for ($i = 0; $i < $remain; $i++)
-	{
-	    $ret .= $c;
-	}
-	return $ret;
-    }
-
-}
-
-/**
- * ファイル関連クラス
- */
 class FileUtil
 {
-
-    public static function getExtension($path)
-    {
-	$tmp = explode('.', $path);
-	return $tmp[count($tmp) - 1];
-    }
 
     public static function deleteFile($dir)
     {
@@ -465,34 +269,7 @@ class FileUtil
 	}
     }
 
-    /**
-     * 指定フォルダ内のPDFファイル取得
-     * @param type $dir
-     */
-    public static function getFile($dir)
-    {
-	if (is_dir($dir))
-	{
-	    if ($dirhandle = opendir($dir))
-	    {
-		while (false !== ($fileName = readdir($dirhandle)))
-		{
-		    if ($fileName != '.' && $fileName != '..')
-		    {
-			$info = pathinfo($dir.$fileName);
-
-			if ($info['extension'] == 'pdf')
-			{
-			    return $fileName;
-			}
-		    }
-		}
-		closedir($dirhandle);
-	    }
-	}
-    }
-
-    public static function deleteOldFile($dir, $expire = '24 hours ago', $prefix = '')
+    public static function delete_old_file($dir, $expire = '24 hours ago', $prefix = '')
     {
 	$expire = strtotime($expire);
 
@@ -522,13 +299,10 @@ class FileUtil
 
 }
 
-/**
- * API関連クラス
- */
 class Api
 {
 
-    public static function request($method, $url, $param, $format = 'xml', $encode = 'UTF8', $header = array())
+    public static function get($method, $url, $param, $format = 'xml', $encode = 'UTF8', $header = array())
     {
 	$res = null;
 	$curl = null;
@@ -598,23 +372,6 @@ class Api
 	}
 
 	return $res;
-    }
-
-}
-
-class Task
-{
-
-    public static function decorate($head, $c = '*')
-    {
-	$ret = $c.' '.$head.' ';
-	//$remain = 100 - mb_strwidth($ret, mb_detect_encoding($ret));
-	$remain = 70 - mb_strwidth($ret);
-	for ($i = 0; $i < $remain; $i++)
-	{
-	    $ret .= $c;
-	}
-	return $ret;
     }
 
 }

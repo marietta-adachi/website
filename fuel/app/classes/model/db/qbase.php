@@ -3,7 +3,7 @@
 class Model_Db_Qbase extends Model
 {
 
-    public static function exec($sql, $p = array(), $limit = 10000, $offset = 0, $cached = false)
+    public static function exec($sql, $p = array(), $limit = 10000, $offset = 0, $cache = false)
     {
 	try
 	{
@@ -14,7 +14,7 @@ class Model_Db_Qbase extends Model
 	    $query = DB::query($sql);
 	    $query->parameters($p);
 
-	    if ($cached)
+	    if ($cache)
 	    {
 		$sec = intval(Config::get("const.query_cache_seconds"));
 		$res = $query->cached($sec)->execute()->as_array();
@@ -39,7 +39,7 @@ class Model_Db_Qbase extends Model
 	}
     }
 
-    public static function getRecentId($tabale)
+    public static function get_recent_id($tabale)
     {
 	$re = DB::query("select currval('{$tabale}_{$tabale}_id_seq') as id")->execute();
 	$id = $re->get("id");

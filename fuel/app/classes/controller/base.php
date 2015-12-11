@@ -258,12 +258,12 @@ class Controller_Base extends Controller_Template
 	return (Input::method() == 'POST');
     }
 
-    protected function check()
+    protected function check($through = true)
     {
 	if (!Security::check_token())
 	{
 	    Common::error(new Exception('CSRF Error'));
-	    return Response::redirect('/');
+	    Response::redirect('/');
 	}
 
 	//$val = $form->validation();
@@ -271,7 +271,14 @@ class Controller_Base extends Controller_Template
 	if (!$val->run())
 	{
 	    $this->set_error($val);
-	    return false;
+	    if ($through)
+	    {
+		return $val->input();
+	    }
+	    else
+	    {
+		return false;
+	    }
 	}
 	return $val->validated();
     }
@@ -296,6 +303,11 @@ class Controller_Base extends Controller_Template
 	{
 	    $this->_errors['other'] = $obj;
 	}
+    }
+
+    protected function has_error()
+    {
+	return count($this->_errors) > 0;
     }
 
     protected function set_info($msg)
