@@ -104,7 +104,11 @@ class Controller_Admin_User extends Controller_Baseadmin
 	$this->template->content = View_Smarty::forge('admin/user_confirm', $d);
     }
 
-    public function action_do()
+    public function action_update()
+    {
+	$this->transaction('update');
+    }
+    public function update()
     {
 	$d = $this->check();
 	if (!$d)
@@ -114,19 +118,19 @@ class Controller_Admin_User extends Controller_Baseadmin
 	}
 
 	$now = Common::now();
-	$row = Model_Db_User::find_by_pk(intval($d['id']));
-	if (empty($row))
+	$user = Model_Db_User::byId($d['id']);
+	if (empty($user))
 	{
-	    $row = Model_Db_Mvendor::forge();
-	    $row->user_created_at = $now;
-	    $row->user_password = Auth::hash_password(Str::random('alnum', 6));
+	    $user = Model_Db_User::anew();
+	    $user->user_password = Auth::hash_password(Str::random('alnum', 6));
 	}
-	$row->user_name = $d['name'];
-	$row->user_status = $d['status'];
-	$row->user_updated_at = $now;
-	$row->save();
+	$user->user_name = $d['name'];
+	$user->user_email = $d['email'];
+	$user->user_status = $d['status'];
+	$user->user_updated_at = $now;
+	$user->save();
 
-	$this->template->content = View_Smarty::forge('admin/vendor_complete', $d);
+	$this->template->content = View_Smarty::forge('admin/user_do', $d);
     }
 
 }

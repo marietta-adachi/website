@@ -36,7 +36,7 @@ abstract class Controller_Template extends \Controller
 	{
 		if ( ! empty($this->template) and is_string($this->template))
 		{
-			// Load the template
+			// marietta
 			//$this->template = \View::forge($this->template);
 			$this->template = \View_Smarty::forge($this->template);
 		}

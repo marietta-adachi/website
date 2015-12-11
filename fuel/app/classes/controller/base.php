@@ -10,6 +10,35 @@ class Controller_Base extends Controller_Template
     protected $_h1 = '';
     protected $_errors = [];
 
+    public function __call($name, $arg)
+    {
+
+	if (is_callable($name))
+	{
+	    $name = explode('_', $name);
+	    $type = $name[count($name) - 1];
+	    unset($name[count($name) - 1]);
+	    $func = implode('_', $name);
+	    switch ($type)
+	    {
+		case 'do':
+		    DB::start_transaction();
+		    try
+		    {
+			$this->$func();
+			DB::commit_transaction();
+		    }
+		    catch (Exception $e)
+		    {
+			DB::rollback_transaction();
+		    }
+		    break;
+		default:
+		    break;
+	    }
+	}
+    }
+
     public function pre($type)
     {
 	Config::load('base');
