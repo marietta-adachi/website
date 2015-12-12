@@ -134,12 +134,10 @@ return [
 			'on' => [
 			],
 			'off' => [
-				'admin_auth_index',
-				'admin_auth_login',
 			],
 		],
 		'ssl' => [
-			'off' => [
+			'on' => [
 			],
 		],
 		'page_limit' => [

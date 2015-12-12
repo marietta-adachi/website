@@ -18,3 +18,6 @@ ng	トランザクション簡潔に
 	操作ログ
 	Exception種類
 	
+
+
+	http://qiita.com/maroyaka@github/items/6bea066c3bdced0d990a

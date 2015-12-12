@@ -333,7 +333,7 @@ class Controller_Base extends Controller_Template
 		return (Input::method() == 'POST');
 	}
 
-	protected function check($through = true)
+	protected function check($through = false)
 	{
 		if (!Security::check_token())
 		{
