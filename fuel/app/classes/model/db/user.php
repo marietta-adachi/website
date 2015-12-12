@@ -42,9 +42,15 @@ class Model_Db_User extends Model_Db_Base
 		return $row;
 	}
 
-	public static function byCustom($id)
+	public static function byCustom($id = null)
 	{
-		return '';
+		$tmp = self::exec('select user_email from user where false', null, null, null, get_called_class());
+		return $tmp;
+	}
+
+	public function get_email()
+	{
+		return $this->user_email;
 	}
 
 	public static function get_hospital_list($order, $limit, $offset, $c, $countonly = false)

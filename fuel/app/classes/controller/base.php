@@ -10,21 +10,41 @@ class Controller_Base extends Controller_Template
 	protected $_h1 = '';
 	protected $_errors = [];
 
+	protected function transaction($action)
+	{
+		DB::start_transaction();
+		try
+		{
+			$res =  $this->$action();
+			if (!$res)
+			{
+				DB::rollback_transaction();
+				return false;;
+			}
+			DB::commit_transaction();
+		}
+		catch (Exception $e)
+		{
+			DB::rollback_transaction();
+			throw new \HttpServerErrorException();
+		}
+	}
+
 	public function special()
 	{
 		$action = $this->request->action;
-		if (is_callable([$this, $action]))
-		{
-			$tmp = explode('_', $action);
-			$type = $tmp[count($tmp) - 1];
+		$tmp = explode('_', $action);
+		$type = $tmp[count($tmp) - 1];
 
-			switch ($type)
-			{
-				case 'update':
+		switch ($type)
+		{
+			case 'do':
+				$action = 'action_' . $action . '_transaction';
+				if (is_callable([$this, $action]))
+				{
 					DB::start_transaction();
 					try
 					{
-						$action = 'action_'.$action.'_tran';
 						$view = $this->$action();
 						if (!$view)
 						{
@@ -36,16 +56,17 @@ class Controller_Base extends Controller_Template
 					{
 						DB::rollback_transaction();
 					}
-					break;
-				default:
-					break;
-			}
-			$this->template->content = $view;
+				}
+				else
+				{
+					throw new \HttpNotFoundException();
+				}
+				break;
+			default:
+				break;
 		}
-		else
-		{
-			throw new \HttpNotFoundException();
-		}
+
+		$this->template->content = $view;
 	}
 
 	public function pre($type)
