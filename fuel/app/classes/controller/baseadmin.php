@@ -3,31 +3,29 @@
 class Controller_Baseadmin extends Controller_Base
 {
 
-    public $template = 'admin/base';
+	public $template = 'admin/base';
 
-    public function before()
-    {
-	parent::before();
-	$this->pre('admin');
-    }
+	public function before()
+	{
+		parent::before();
+		$this->pre('admin');
+	}
 
-    public function after($response)
-    {
-	parent::after($response, 'admin');
-	$this->post('admin');
-	return $response;
-    }
+	public function after($response)
+	{
+		$response = parent::after($response, 'admin');
+		$this->post('admin',$this->template->content->tplname());
+		return $response;
+	}
 
-    protected function is_login()
-    {
-	$tmp = $this->get_user();
-	return !empty($tmp);
-    }
+	protected function is_login()
+	{
+		return !empty(Model_Db_Admin::bySession());
+	}
 
-    protected function get_user()
-    {
-	$tmp = Session::get('admin');
-	return $tmp;
-    }
+	protected function get_user()
+	{
+		return Model_Db_Admin::bySession();
+	}
 
 }

@@ -1,1 +1,4 @@
 /nbproject/private/
+fuel/app/tmp/
+fuel/app/logs/
+public/templates_c/

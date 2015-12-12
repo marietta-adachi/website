@@ -1,17 +1,11 @@
 <?php
 
-/**
- * 
- */
+
 class Controller_Admin_Setting extends Controller_Baseadmin
 {
 
-	/**
-	 * フォーム情報を取得します
-	 * @param type $type
-	 * @return type
-	 */
-	private function getForm($type = 0)
+
+	private function get_form($type = 0)
 	{
 		$form = Fieldset::instance();
 		if (count($form->field()) > 0)
@@ -41,10 +35,7 @@ class Controller_Admin_Setting extends Controller_Baseadmin
 		return $form;
 	}
 
-	/**
-	 * 設定画面を表示します
-	 * @param type $updated
-	 */
+
 	public function action_index($updated = false)
 	{
 		try
@@ -67,12 +58,8 @@ class Controller_Admin_Setting extends Controller_Baseadmin
 		}
 	}
 
-	/**
-	 * 設定を更新します
-	 * @param type $type
-	 * @throws Exception
-	 */
-	public function action_update($type = 0)
+
+	public function action_do($type = 0)
 	{
 
 		$this->checkCsrf("admin");

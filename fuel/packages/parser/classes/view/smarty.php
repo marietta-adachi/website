@@ -77,10 +77,7 @@ class View_Smarty extends \View
 		return static::$_parser;
 	}
 	
-	/**
-	 * 遷移先のテンプレート名を取得します（マリエッタ追加）
-	 * @return type
-	 */
+	// marietta
 	public function tplname()
 	{
 		$tmp = explode("app" . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR, $this->file_name);

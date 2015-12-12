@@ -3,17 +3,9 @@
 class Controller_Index extends Controller_Basesite
 {
 
-    public function action_index()
-    {
-	try
+	public function action_index()
 	{
-	 
-	    $this->template->content = View_Smarty::forge("index", []);
+		$this->template->content = View_Smarty::forge("index", []);
 	}
-	catch (Exception $e)
-	{
-	    $this->error($e);
-	}
-    }
 
 }

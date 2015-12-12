@@ -420,6 +420,12 @@ class Request
 					{
 						$method = 'action_'.$this->action;
 					}
+
+					//marietta
+					if ( ! $class->hasMethod($method))
+					{
+						$method = 'special';
+					}
 				}
 
 				if ($class->hasMethod($method))

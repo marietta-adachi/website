@@ -3,11 +3,6 @@
 class Validation extends Fuel\Core\Validation
 {
 
-	/**
-	 * 電話番号形式かチェックします
-	 * @param type $val
-	 * @return type
-	 */
 	public function _validation_valid_tel($val)
 	{
 		if (mb_ereg("^\d{1,4}-\d{1,4}-\d{1,4}$", $val))
@@ -20,11 +15,6 @@ class Validation extends Fuel\Core\Validation
 		}
 	}
 
-	/**
-	 * 全角カタカナかチェックします
-	 * @param type $val
-	 * @return type
-	 */
 	public function _validation_valid_katakana($val)
 	{
 		mb_regex_encoding("UTF-8");
@@ -39,11 +29,6 @@ class Validation extends Fuel\Core\Validation
 		}
 	}
 
-	/**
-	 * 全角かチェックします
-	 * @param type $val
-	 * @return boolean
-	 */
 	public function _validation_valid_zenkaku($val)
 	{
 		$encoding = mb_internal_encoding();
@@ -59,24 +44,11 @@ class Validation extends Fuel\Core\Validation
 		return true;
 	}
 
-	/**
-	 * 半角かチェックします
-	 * @param type $val
-	 * @return boolean
-	 */
 	public function _validation_valid_hankaku($val)
 	{
 		return $this->isHankaku($val);
 	}
 
-	/**
-	 * 半角かチェックします
-	 * @param type $str
-	 * @param type $include_kana
-	 * @param type $include_controls
-	 * @param type $encoding
-	 * @return boolean
-	 */
 	private function isHankaku($str, $include_kana = false, $include_controls = false, $encoding = null)
 	{
 		if (!$include_controls && !ctype_print($str))
@@ -108,11 +80,10 @@ class Validation extends Fuel\Core\Validation
 		}
 	}
 
-	/**
-	 * メールアドレスのバリデーションチェックを行います（RF2822非準拠対応）
-	 * @param type $val
-	 * @return type
+	/*
+	 * メールアドレスRF2822非準拠チェック
 	 */
+
 	public function _validation_valid_email($val)
 	{
 		$val = $this->parse($val);
@@ -120,12 +91,10 @@ class Validation extends Fuel\Core\Validation
 		//return $this->_empty($val) || $this->filter_var_mail($val);
 	}
 
-	/**
-	 * メールアドレス（複数）のバリデーションチェックを行います（RF2822非準拠対応）
-	 * @param type $val
-	 * @param type $separator
-	 * @return boolean
+	/*
+	 * メールアドレス（複数）RF2822非準拠チェック
 	 */
+
 	public function _validation_valid_emails($val, $separator = ',')
 	{
 		if ($this->_empty($val))
@@ -147,11 +116,10 @@ class Validation extends Fuel\Core\Validation
 		return true;
 	}
 
-	/**
-	 * RF2822非準拠の部分を除去します
-	 * @param type $email
-	 * @return type
+	/*
+	 * RF2822非準拠の部分を除去
 	 */
+
 	private function parse($email)
 	{
 		$email = explode("@", $email);
@@ -177,24 +145,4 @@ class Validation extends Fuel\Core\Validation
 		return $name . "@" . $domain;
 	}
 
-	/* private function filter_var_mail($email)
-	  {
-	  // "をエスケープ
-	  $regexp = "/^(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&'*+/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&'*+/=?\^`{}~|\-]+))*)|(?:\"(?:\\[^\r\n]|[^\\\"])*\")))\@(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&'*+/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&'*+/=?\^`{}~|\-]+))*)|(?:\[(?:\\\S|[\x21-\x5a\x5e-\x7e])*\])))$/i";
-	  // "と/をエスケープ
-	  $regexp = "/^(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+))*)|(?:\"(?:\\[^\r\n]|[^\\\"])*\")))\@(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+))*)|(?:\[(?:\\\S|[\x21-\x5a\x5e-\x7e])*\])))$/i";
-
-	  // 古里さん
-	  $regexp = '/^(?:[^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff]+(?![^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff])|"[^\\\\\x80-\xff\n\015"]*(?:\\\\[^\x80-\xff][^\\\\\x80-\xff\n\015"]*)*")(?:\.(?:[^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff]+(?![^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff])|"[^\\\\\x80-\xff\n\015"]*(?:\\\\[^\x80-\xff][^\\\\\x80-\xff\n\015"]*)*"))*@(?:[^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff]+(?![^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff])|\[(?:[^\\\\\x80-\xff\n\015\[\]]|\\\\[^\x80-\xff])*\])(?:\.(?:[^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff]+(?![^(\040)<>@,;:".\\\\\[\]\000-\037\x80-\xff])|\[(?:[^\\\\\x80-\xff\n\015\[\]]|\\\\[^\x80-\xff])*\]))*$/';
-	  $regexp = '/^(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&\'*+/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&\'*+/=?\^`{}~|\-]+))*)|(?:"(?:\\[^\r\n]|[^\\"])*")))\@(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&\'*+/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&\'*+/=?\^`{}~|\-]+))*)|(?:\[(?:\\\S|[\x21-\x5a\x5e-\x7e])*\])))$/';
-
-	  if (preg_match($regexp, $email))
-	  {
-	  return $email;
-	  }
-	  else
-	  {
-	  return false;
-	  }
-	  } */
 }

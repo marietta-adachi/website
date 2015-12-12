@@ -30,14 +30,14 @@
 		{Security::js_fetch_token()}
     </head>
     <body id="{$screen}">
-		{$device}
+		
+		{* Google tag manager *}
 		{literal}
-			<--Google tag manager-->
 		{/literal}
 
-		<input type="hidden" id="message" value="{$info|default:''}"/>{* 更新後のメッセージ表示用 *}
+		<input type="hidden" id="message" value="{$info|default:''}"/>
 		{if Config::get("site.meta.display")}
-			<font size="1">title：　{$title}<br/>description：　{$description}<br/>keywords：　{$keywords}<br/>h1：　{$h1|default:""}<br/></font>
+			<font size="1">device：　{$device}<br/>title：　{$title}<br/>description：　{$description}<br/>keywords：　{$keywords}<br/>h1：　{$h1|default:""}<br/></font>
 		{/if}
 
 		<header>

@@ -1,4 +1,4 @@
-﻿# A5:ER FORMAT:10
+﻿# A5:ER FORMAT:08
 # A5:ER ENCODING:UTF8
 # A5:ER Mk-1 Copyright (C)2007 m.matsubara
 # A5:SQL Mk-2 Copyright (C)1997 m.matsubara
@@ -10,7 +10,7 @@ Author=
 MaxEntityRowShow=1000
 ReadOnlyRecommend=0
 Page=Main
-PageInfo="Main",4,"A3Landscape",$FFFFFF
+PageInfo="Main",4,"A3Landscape"
 LogicalView=1
 DecodeDomain=0
 ViewModePageIndividually=1
@@ -35,46 +35,47 @@ DefaultIndexName=%0:s_IX%1:d
 DefaultFkName=%0:s_FK%1:d
 SqlSeparator=0
 ShowTag=1
-ShowCommonAttributes=0
 
 [Entity]
 PName=admin
 LName=admin
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=600
 Top=200
-Field="admin_id","admin_id","uuid","NOT NULL",0,"","",$FFFFFFFF,""
+Field="admin_id","admin_id","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
 Field="admin_name","admin_name","varchar(50)","NOT NULL",,"","",$FFFFFFFF,""
 Field="admin_email","admin_email","varchar(255)","NOT NULL",,"","",$FFFFFFFF,""
 Field="admin_password","admin_password","varchar(255)","NOT NULL",,"","",$FFFFFFFF,""
+Field="admin_status","admin_status","tinyint","NOT NULL",,"","",$FFFFFFFF,""
 Field="admin_created_at","admin_created_at","timestamp","NOT NULL",,"","",$FFFFFFFF,""
 Field="admin_updated_at","admin_updated_at","timestamp",,,"","",$FFFFFFFF,""
 Field="admin_deleted_at","admin_deleted_at","timestamp",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20151208191723
-Position="Main",600,200
+ModifiedDateTime=20151212170554
+Position="MAIN",600,200
 
 [Entity]
 PName=user
 LName=user
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=200
 Top=200
-Field="user_id","user_id","uuid","NOT NULL",0,"","",$FFFFFFFF,""
+Field="user_id","user_id","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
 Field="user_name","user_name","varchar(50)","NOT NULL",,"","",$FFFFFFFF,""
 Field="user_email","user_email","varchar(255)","NOT NULL",,"","",$FFFFFFFF,""
 Field="user_password","user_password","varchar(255)","NOT NULL",,"","",$FFFFFFFF,""
+Field="user_status","user_status","tinyint","NOT NULL",,"","",$FFFFFFFF,""
 Field="user_created_at","user_created_at","timestamp","NOT NULL",,"","",$FFFFFFFF,""
 Field="user_updated_at","user_updated_at","timestamp",,,"","",$FFFFFFFF,""
 Field="user_deleted_at","user_deleted_at","timestamp",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20151208191717
-Position="Main",200,200
+ModifiedDateTime=20151212170550
+Position="MAIN",200,200
