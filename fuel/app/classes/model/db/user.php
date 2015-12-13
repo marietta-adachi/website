@@ -44,6 +44,9 @@ class Model_Db_User extends Model_Db_Base
 
 	public static function byCustom($id = null)
 	{
+		
+		
+		
 		$tmp = self::exec('select user_email from user where false', null, null, null, get_called_class());
 		return $tmp;
 	}

@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Admin_User extends Controller_Baseadmin
+class Controller_Admin_User extends Controller_Base_Admin
 {
 
 	private $order = array(
@@ -9,7 +9,7 @@ class Controller_Admin_User extends Controller_Baseadmin
 		'id' => ['user_id-desc', '順'],
 	);
 
-	private function validateCondition($c)
+	private function validate_condition($c)
 	{
 		$val = Validation::instance();
 		$val->add('free_word', '')->add_rule('max_length', 100);
@@ -21,10 +21,10 @@ class Controller_Admin_User extends Controller_Baseadmin
 
 	public function action_index()
 	{
-		$this->init_condition(__METHOD__, array('status' => array(HospitalStatus::VALID), 'order' => 'm_hospital_name-asc'));
+		/*$this->init_condition(__METHOD__, array('status' => array(HospitalStatus::VALID), 'order' => 'm_hospital_name-asc'));
 
 		list($c, $o, $p, $param) = $this->get_condition(__METHOD__);
-		$this->validateCondition($c);
+		$this->validate_condition($c);
 
 		$count = Model_Db_Qcommon::get_list(null, null, null, $c, true);
 		$count = $count[0]['count'];
@@ -36,8 +36,14 @@ class Controller_Admin_User extends Controller_Baseadmin
 		$data['user_list'] = $list;
 		$data['user_count'] = $count;
 		$data['order_list'] = $this->order;
-		$data['order'] = $o;
-		$this->template->content = View_Smarty::forge('admin/user', $data)->set_safe('pagination', $page->render());
+		$data['order'] = $o;*/
+		
+		//$res = Model_Db_User::byCustom();
+
+		//$d['user_list'] =$res;
+		$d = [];
+
+		$this->template->content = View_Smarty::forge('admin/user/index', $d);//>set_safe('pagination', $page->render());
 	}
 
 	private function get_form()
