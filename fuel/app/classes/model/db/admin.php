@@ -17,6 +17,34 @@ class Model_Db_Admin extends Model_Db_Base
 	// key
 	protected static $_primary_key = 'admin_id';
 
+	public static function login($email, $password, $remember)
+	{
+		$tbl = self::$_table_name;
+		$row = self::find_one_by(array($tbl . '_email' => $email, $tbl . '_status' => Status::VALID,));
+		if (empty($row))
+		{
+			return false;
+		}
+
+		$col = $tbl . '_password';
+		if ($row->$col != Auth::hash_password($password))
+		{
+			return false;
+		}
+
+		Session::create();
+		$close = !(boolean) $remember;
+		Session::set('expire_on_close', $close);
+		Session::set(self::$_table_name, $row);
+		
+		return true;
+	}
+
+	public static function logout()
+	{
+		Session::delete(self::$_table_name);
+	}
+
 	public static function bySession()
 	{
 		$bean = Session::get('admin');

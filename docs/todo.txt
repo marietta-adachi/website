@@ -4,8 +4,9 @@ ok	サーバエラーはエラー画面に
 
 
 ng	トランザクション簡潔に
-	MySQL文字化け
+	
 	bootstrap対応
+	MySQL文字化け
 
 
 	jsへの値渡し簡潔に
@@ -13,12 +14,15 @@ ng	トランザクション簡潔に
 	認証判定
 	httpsリダイレクト
 
-	多言語
-
-	操作ログ
+	
 	Exception種類
-	<base>
-
+	
 
 	http://qiita.com/maroyaka@github/items/6bea066c3bdced0d990a
 	emmet
+
+	UserModelにログイン関数
+	多言語（langに）
+	操作ログ
+
+	plantUML
