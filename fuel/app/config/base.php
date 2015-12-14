@@ -59,7 +59,6 @@ return [
 			'keywords' => [],
 			'description' => '',
 			/*
-			 * 画面毎の固有値
 			 * key：テンプレート名
 			 * title：$commonTitleの前に付与
 			 * keywords：$commonKeywordsの任意の場所に挿入
@@ -92,8 +91,7 @@ return [
 			],
 		],
 		'page_limit' => [
-			'hospital' => 15,
-			'blog' => 3,
+			'user' => 5,
 		],
 		'expire' => [
 			'xx' => 30 * 24 * 60 * 60,
@@ -114,7 +112,6 @@ return [
 			'keywords' => [],
 			'description' => '管理｜WEBSITE',
 			/*
-			 * 画面毎の固有値
 			 * key：テンプレート名
 			 * title：$commonTitleの前に付与
 			 * keywords：$commonKeywordsの任意の場所に挿入
@@ -131,9 +128,11 @@ return [
 			],
 		],
 		'auth' => [
-			'on' => [
-			],
 			'off' => [
+				'admin/auth/index',
+				'admin/auth/login',
+			],
+			'both' => [
 			],
 		],
 		'ssl' => [
@@ -141,8 +140,7 @@ return [
 			],
 		],
 		'page_limit' => [
-			'hospital' => 30,
-			'review' => 30,
+			'user' => 30,
 		],
 	],
 // </editor-fold>

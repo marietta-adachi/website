@@ -231,7 +231,7 @@ class Common
 class Page
 {
 
-	public static function getPage($action, $count, $crrPage, $limit = 100, $name = 'bootstrap3_ma')
+	public static function get_page($action, $count, $crrPage, $limit = 100, $name = 'bootstrap3_ma')
 	{
 		$config = array(
 			'name' => 'default',

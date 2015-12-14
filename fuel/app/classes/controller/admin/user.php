@@ -4,46 +4,42 @@ class Controller_Admin_User extends Controller_Base_Admin
 {
 
 	private $order = array(
-		'email' => ['user_email-desc', '順'],
-		'name' => ['user_name-desc', '順'],
-		'id' => ['user_id-desc', '順'],
+		'id' => ['user_id-asc', '順'],
+		'name' => ['user_name-asc', '順'],
+		'email' => ['user_email-asc', '順'],
 	);
 
-	private function validate_condition($c)
+	private function get_validation()
 	{
 		$val = Validation::instance();
-		$val->add('free_word', '')->add_rule('max_length', 100);
-		if (!$val->run($c))
-		{
-			throw new Exception('検索条件が不正です');
-		}
+		$val->add('freeword', 'フリーワード')->add_rule('max_length', 100);
+		$val->add('status', 'ステータス');
+		return $val;
 	}
 
 	public function action_index()
 	{
-		/*$this->init_condition(__METHOD__, array('status' => array(HospitalStatus::VALID), 'order' => 'm_hospital_name-asc'));
+		$this->init_condition(['status' => [Status::VALID, Status::INVALID], 'order' => 'id']);
+		list($c, $o, $p, $param) = $this->get_condition();
 
-		list($c, $o, $p, $param) = $this->get_condition(__METHOD__);
-		$this->validate_condition($c);
+		$count = 0;
+		$list = [];
+		$page = null;
+		if ($this->check_condition($c, $this->get_validation()))
+		{
+			$count = Model_Db_User::search_count($c);
+			$page = Page::get_page('admin/user', $count, $p, Config::get('admin.page_limit.user'));
+			$list = Model_Db_User::search($c, $o, $page->per_page, $page->offset);
+			$page = $page->render();
+		}
 
-		$count = Model_Db_Qcommon::get_list(null, null, null, $c, true);
-		$count = $count[0]['count'];
-
-		$page = Page::getPage('admin/hospital', $count, $p, Config::get('admin.page_limit.hospital'));
-		$list = Model_Db_Qcommon::get_list($o, $page->per_page, $page->offset, $c);
-
-		$data = $c;
-		$data['user_list'] = $list;
-		$data['user_count'] = $count;
-		$data['order_list'] = $this->order;
-		$data['order'] = $o;*/
+		$d = $c;
+		$d['user_list'] = $list;
+		$d['user_count'] = $count;
+		$d['order'] = $o;
+		$d['order_list'] = $this->order;
 		
-		//$res = Model_Db_User::byCustom();
-
-		//$d['user_list'] =$res;
-		$d = [];
-
-		$this->template->content = View_Smarty::forge('admin/user/index', $d);//>set_safe('pagination', $page->render());
+		$this->template->content = View_Smarty::forge('admin/user/index', $d)->set_safe('pagination', $page);
 	}
 
 	private function get_form()
@@ -53,11 +49,11 @@ class Controller_Admin_User extends Controller_Base_Admin
 		{
 			return $form;
 		}
-		$form->add('mode', '');
+		$form->add('operation', '');
 		$form->add('id', '');
-		$form->add('name', '')->add_rule('required')->add_rule('max_length', 50);
-		$form->add('email', '')->add_rule('required');
-		$form->add('status', '')->add_rule('required');
+		$form->add('name', 'お名前')->add_rule('required')->add_rule('max_length', 50);
+		$form->add('email', 'メールアドレス')->add_rule('required');
+		$form->add('status', 'ステータス')->add_rule('required');
 		return $form;
 	}
 
@@ -70,45 +66,45 @@ class Controller_Admin_User extends Controller_Base_Admin
 		else
 		{
 			$d = Input::get();
-			if ($d['mode'] == EditMode::MOD)
+			if ($d['operation'] == Operation::MODIFY)
 			{
-				$user = Model_Db_User::find_by_pk($d['id']);
+				$user = Model_Db_User::by_id($d['id']);
 				$d['id'] = $user->user_id;
 				$d['name'] = $user->user_name;
-				$d['address'] = $user->user_address;
-				$d['tel'] = $user->user_tel;
 				$d['email'] = $user->user_email;
 				$d['status'] = $user->user_status;
 			}
 		}
+
+		//$d['js_params'] = json_encode([]);
 
 		$this->template->content = View_Smarty::forge('admin/user_edit', $d);
 	}
 
 	public function action_confirm()
 	{
-		$d = $this->check();
-
-		if (false)
+		$d = $this->check($this->get_form());
+		if (!$d)
 		{
-			$this->set_error(['email' => 'xxx']);
-		}
-		if (false)
-		{
-			$this->set_error(['email' => 'xxx']);
-		}
-		if (false)
-		{
-			$this->set_error(['email' => 'xxx']);
+			$this->action_edit();
+			return;
 		}
 
+		if (!Model_Db_User::unique_email($d['email']))
+		{
+			$this->set_error(['email' => 'このメールアドレスは使用されています']);
+		}
+		if (!Model_Db_User::unique_name($d['name']))
+		{
+			$this->set_error(['name' => 'この名前は使用されています']);
+		}
 		if ($this->has_error())
 		{
 			$this->action_edit();
 			return;
 		}
 
-		$this->template->content = View_Smarty::forge('admin/user_confirm', $d);
+		$this->template->content = View_Smarty::forge('admin/user/confirm', $d);
 	}
 
 	public function action_update()
@@ -118,7 +114,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 
 	public function update()
 	{
-		$d = $this->check();
+		$d = $this->check($this->get_form());
 		if (!$d)
 		{
 			$this->action_edit();
@@ -126,7 +122,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 		}
 
 		$now = Common::now();
-		$user = Model_Db_User::byId($d['id']);
+		$user = Model_Db_User::by_id($d['id']);
 		if (empty($user))
 		{
 			$user = Model_Db_User::anew();
@@ -138,7 +134,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 		$user->user_updated_at = $now;
 		$user->save();
 
-		$this->template->content = View_Smarty::forge('admin/user_do', $d);
+		$this->template->content = View_Smarty::forge('admin/user/do', $d);
 	}
 
 }

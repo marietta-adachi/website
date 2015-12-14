@@ -24,8 +24,3 @@
 
 </form>	
 	
-<script type="text/javascript">
-$(function(){
-	setAddress();
-});
-</script>

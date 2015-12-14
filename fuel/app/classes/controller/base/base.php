@@ -116,35 +116,40 @@ class Controller_Base_Base extends Controller_Template
 		}
 
 		// authentication
-		/* list($on,$cfg) = $this->get_onoff(Config::get($type . '.auth'));
-		  $path = ($type == 'site') ? '' : $type;
-		  if ($this->is_login())
-		  {
-		  $act = array_diff($no_auth_action, $both_auth_action);
-		  if (in_array($action, $act))
-		  {
-		  return Response::redirect($path);
-		  }
-		  }
-		  else
-		  {
-		  if (!in_array($action, $no_auth_action))
-		  {
-		  return Response::redirect($path . '/auth');
-		  }
-		  } */
+		/*$flg = false;
+		list($need, $action_list, $both_list) = $this->get_onoff(Config::get($type . '.auth'));
+		if (empty($both) || !in_array($action, $both))
+		{
+			if ($this->is_login())
+			{
+				$flg = $need ? !in_array($action, $action_list) : in_array($action, $action_list);
+			}
+			else
+			{
+				$flg = $need ? in_array($action, $action_list) : !in_array($action, $action_list);
+			}
+		}
+		if ($flg)
+		{
+			return Response::redirect((($type == 'site') ? '' : $type) . '/auth');
+		}*/
 	}
 
 	private function get_onoff($config)
 	{
+		$both = null;
+		if (array_key_exists('both', $config))
+		{
+			$both = $config['both'];
+		}
 
 		if (array_key_exists('on', $config))
 		{
-			return [true, $config['on']];
+			return [true, $config['on'], $both];
 		}
 		else if (array_key_exists('off', $config))
 		{
-			return [false, $config['off']];
+			return [false, $config['off'], $both];
 		}
 		else
 		{
@@ -333,7 +338,17 @@ class Controller_Base_Base extends Controller_Template
 		return (Input::method() == 'POST');
 	}
 
-	protected function check($through = false)
+	protected function check_condition($c,$val)
+	{
+		if (!$val->run($c))
+		{
+			$this->set_error($val);
+			return false;
+		}
+		return true;
+	}
+
+	protected function check($form, $through = false)
 	{
 		if (!Security::check_token())
 		{
@@ -341,8 +356,7 @@ class Controller_Base_Base extends Controller_Template
 			Response::redirect('/');
 		}
 
-		//$val = $form->validation();
-		$val = $this->get_form()->validation();
+		$val = $form->validation();
 		if (!$val->run())
 		{
 			$this->set_error($val);
@@ -390,22 +404,26 @@ class Controller_Base_Base extends Controller_Template
 		$this->template->set_global('info', $msg);
 	}
 
-	protected function init_condition($key, $value = [])
+	protected function init_condition($value = [])
 	{
 		$flg = Input::param('search');
 		if (empty($flg))
 		{
-			//Session::set($key, $value);
-			Common::setCookie($key, $value);
+			$bt = debug_backtrace();
+			Session::set($bt[1]['class'] . '/' . $bt[1]['function'], $value);
+			//Common::setCookie($key, $value);
 		}
 	}
 
-	protected function get_condition($key, $another = [])
+	protected function get_condition($another = [])
 	{
+		$bt = debug_backtrace();
+		$key = $bt[1]['class'] . '/' . $bt[1]['function'];
+		
 		$pageFirst = false;
 
-		//$c = Session::get($key);
-		$c = Common::getCookie($key);
+		$c = Session::get($key);
+		//$c = Common::getCookie($key);
 
 		$c = empty($c) ? [] : $c;
 
@@ -422,8 +440,8 @@ class Controller_Base_Base extends Controller_Template
 		}
 		// 更に今回の条件をマージし、セッションに保存しておく
 		$c = array_merge($c, $in);
-		//Session::set($key, $c);
-		Common::setCookie($key, $c);
+		Session::set($key, $c);
+		//Common::setCookie($key, $c);
 
 
 		// ページャ用のgetパラメータを生成

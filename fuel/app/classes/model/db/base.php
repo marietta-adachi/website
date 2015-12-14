@@ -3,7 +3,7 @@
 class Model_Db_Base extends Model_Crud
 {
 
-	protected static function exec($sql, $p = [], $limit = 1000, $offset = 0, $bean = null, $cache = false)
+	protected static function exec($sql, $p = [], $limit = 1000, $offset = 0, $cache = false)
 	{
 		try
 		{
@@ -11,15 +11,7 @@ class Model_Db_Base extends Model_Crud
 			$limit = is_null($limit) ? 1000 : $limit;
 			$offset = is_null($offset) ? 0 : $offset;
 
-
-			if (is_object($bean))
-			{
-				if ($bean instanceof Model_Db_Base)
-				{
-					$bean_name = get_class($bean);
-				}
-			}
-
+			$bean = get_called_class();
 			$query = DB::query($sql . " limit " . $limit . " offset " . $offset)->parameters($p);
 			if ($cache)
 			{

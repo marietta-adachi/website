@@ -1,3 +1,11 @@
+<script>
+	$(function () {
+
+
+
+
+	});
+</script>
 <div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
 		<div class="x_title">
@@ -59,15 +67,15 @@
 
 {*
 <form id="ma_form" method="get" action="admin/hospital">
-	<input type="hidden" name="search" value="1" />
+<input type="hidden" name="search" value="1" />
 
 
 
-	フリーワード検索：<input type="text" name="free_word" value="{$free_word|default:''}" onkeydown="search();" /><br/>
-	ステータス：
-	{foreach from=HospitalStatus::$name key=k item=v}
-        <input type="checkbox" name="status[]" onchange="search_select()" value="{$k}" {if in_array($k, $status|default:array())}checked="checked"{/if}>{$v}
-	{/foreach}<br/>
+フリーワード検索：<input type="text" name="free_word" value="{$free_word|default:''}" onkeydown="search();" /><br/>
+ステータス：
+{foreach from=HospitalStatus::$name key=k item=v}
+<input type="checkbox" name="status[]" onchange="search_select()" value="{$k}" {if in_array($k, $status|default:array())}checked="checked"{/if}>{$v}
+{/foreach}<br/>
 </form>
 
 <br/>
@@ -78,10 +86,10 @@
 <br/>
 {$count}件
 <div>
-	{if count($user_list) > 0}
+{if count($user_list) > 0}
 
-	{else}
-		該当データがありません。
-	{/if}
+{else}
+該当データがありません。
+{/if}
 </div>
 *}

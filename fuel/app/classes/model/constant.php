@@ -4,8 +4,8 @@ class Operation
 {
 
 	const ADD = 1;
-	const MOD = 2;
-	const DEL = 3;
+	const MODIFY = 2;
+	const DELETE = 3;
 
 }
 

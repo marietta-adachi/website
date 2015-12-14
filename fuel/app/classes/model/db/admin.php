@@ -11,6 +11,7 @@ class Model_Db_Admin extends Model_Db_Base
 	protected static $_admin_email = 'admin_email';
 	protected static $_admin_password = 'admin_password';
 	protected static $_admin_status = 'admin_status';
+	protected static $_admin_last_login = 'admin_last_login';
 	protected static $_admin_created_at = 'admin_created_at';
 	protected static $_admin_updated_at = 'admin_updated_at';
 	protected static $_admin_deleted_at = 'admin_deleted_at';
@@ -19,24 +20,26 @@ class Model_Db_Admin extends Model_Db_Base
 
 	public static function login($email, $password, $remember)
 	{
-		$tbl = self::$_table_name;
-		$row = self::find_one_by(array($tbl . '_email' => $email, $tbl . '_status' => Status::VALID,));
+		$row = self::find_one_by(array('admin_email' => $email, 'admin_status' => Status::VALID,));
 		if (empty($row))
 		{
 			return false;
 		}
 
-		$col = $tbl . '_password';
-		if ($row->$col != Auth::hash_password($password))
+
+		if ($row->admin_password != Auth::hash_password($password))
 		{
 			return false;
 		}
+
+		$row->admin_last_login = Common::now();
+		$row->save();
 
 		Session::create();
 		$close = !(boolean) $remember;
 		Session::set('expire_on_close', $close);
 		Session::set(self::$_table_name, $row);
-		
+
 		return true;
 	}
 
@@ -45,10 +48,15 @@ class Model_Db_Admin extends Model_Db_Base
 		Session::delete(self::$_table_name);
 	}
 
-	public static function bySession()
+	public static function by_session()
 	{
 		$bean = Session::get('admin');
 		return $bean;
+	}
+
+	public function get_id()
+	{
+		return $this->admin_id;
 	}
 
 }
