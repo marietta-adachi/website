@@ -68,9 +68,9 @@
 					<div class="col-md-3 left_col">
 						{$menu}
 					</div>
-					<div class="top_nav">
+					<!--div class="top_nav">
 						{$top}
-					</div>
+					</div-->
 					<div class="right_col" role="main">
 						<div class="{$screen}">
 							{$header}

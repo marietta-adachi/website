@@ -1,7 +1,7 @@
 <?php
 
 
-class Controller_Admin_Index extends Controller_Baseadmin
+class Controller_Admin_Index extends Controller_Base_Admin
 {
 
 	public function action_index()

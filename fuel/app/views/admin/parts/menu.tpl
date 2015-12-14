@@ -1,7 +1,7 @@
 <div class="left_col scroll-view">
 
 	<div class="navbar nav_title" style="border: 0;">
-		<a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>{Config::get('system.name')}</span></a>
+		<a href="index.html" class="site_title"><i class="fa fa-hospital-o"></i> <span>{Config::get('system.name')}</span></a>
 	</div>
 	<div class="clearfix"></div>
 
@@ -43,7 +43,13 @@
 					</ul>
 				</li>*}
 				<li {if preg_match("/^admin-user(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/user"><i class="fa fa-laptop"></i>ユーザ管理</a>
+					<a href="admin/user"><i class="fa fa-laptop"></i>会員管理</a>
+				</li>
+				<li {if preg_match("/^admin-user(|-.*)$/",$screen)}class="current-page"{/if}>
+					<a href="admin/user"><i class="fa fa-laptop"></i>物件管理</a>
+				</li>
+				<li {if preg_match("/^admin-user(|-.*)$/",$screen)}class="current-page"{/if}>
+					<a href="admin/user"><i class="fa fa-laptop"></i>プラン管理</a>
 				</li>
 				<li {if preg_match("/^admin-setting(|-.*)$/",$screen)}class="current-page"{/if}>
 					<a href="admin/setting"><i class="fa fa-laptop"></i>設定</a>
@@ -57,8 +63,8 @@
 	<!-- /sidebar menu -->
 
 	<!-- /menu footer buttons -->
-	<!--div class="sidebar-footer hidden-small">
-		<a data-toggle="tooltip" data-placement="top" title="Settings">
+	<div class="sidebar-footer hidden-small">
+		{*<a data-toggle="tooltip" data-placement="top" title="Settings">
 			<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
 		</a>
 		<a data-toggle="tooltip" data-placement="top" title="FullScreen">
@@ -66,10 +72,10 @@
 		</a>
 		<a data-toggle="tooltip" data-placement="top" title="Lock">
 			<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-		</a>
+		</a>*}
 		<a data-toggle="tooltip" data-placement="top" title="Logout">
 			<span class="glyphicon glyphicon-off" aria-hidden="true"></span>
 		</a>
-	</div-->
+	</div>
 	<!-- /menu footer buttons -->
 </div>

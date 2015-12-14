@@ -1,10 +1,5 @@
-<!-- footer content -->
-					<footer>
-						<div class="">
-							<p class="pull-right">Gentelella Alela! a Bootstrap 3 template by <a>Kimlabs</a>. |
-								<span class="lead"> <i class="fa fa-paw"></i> Gentelella Alela!</span>
-							</p>
-						</div>
-						<div class="clearfix"></div>
-					</footer>
-					<!-- /footer content -->
+<footer>
+	<div class="">
+		<p class="pull-right">CopyRight (c) 2004- Marietta Corporation All Rights Reserved.</p>
+	</div>
+</footer>

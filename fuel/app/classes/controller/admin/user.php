@@ -78,7 +78,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 
 		//$d['js_params'] = json_encode([]);
 
-		$this->template->content = View_Smarty::forge('admin/user_edit', $d);
+		$this->template->content = View_Smarty::forge('admin/user/edit', $d);
 	}
 
 	public function action_confirm()

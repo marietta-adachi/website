@@ -30,7 +30,7 @@ class Controller_Base_Base extends Controller_Template
 		}
 	}
 
-	public function special()
+	/*public function special()
 	{
 		$action = $this->request->action;
 		$tmp = explode('_', $action);
@@ -67,7 +67,7 @@ class Controller_Base_Base extends Controller_Template
 		}
 
 		$this->template->content = $view;
-	}
+	}*/
 
 	public function pre($type)
 	{
