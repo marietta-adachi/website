@@ -10,7 +10,7 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 		{
 			return $form;
 		}
-		$form->add('email', 'メールアドレス')->add_rule('required')->add_rule('max_length', 30)->add_rule('valid_email');
+		$form->add('email', 'メールアドレス')->add_rule('required')->add_rule('valid_email');
 		$form->add('password', 'パスワード')->add_rule('required')->add_rule('max_length', 30);
 		$form->add('remember', 'パスワードを保存する')->add_rule('match_value', '1');
 		return $form;
@@ -19,12 +19,12 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 	public function action_index()
 	{
 		$form = $this->get_form();
-		if (Input::method() === 'POST')
+		if ($this->is_post())
 		{
 			$form->repopulate();
 		}
-		$data = $form->input();
-		$this->template->content = View_Smarty::forge('admin/auth', $data);
+		$d = $form->input();
+		$this->template->content = View_Smarty::forge('admin/auth', $d);
 	}
 
 	public function action_login()
@@ -40,7 +40,7 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 
 		if (!Model_Db_Admin::login($d['email'], $d['password'], $d['remember']))
 		{
-			$this->set_error('IDまたはパスワードが違います');
+			$this->set_error('メールアドレスまたはパスワードが違います');
 			$this->action_index();
 			return;
 		}

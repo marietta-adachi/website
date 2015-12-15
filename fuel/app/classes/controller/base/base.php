@@ -15,11 +15,12 @@ class Controller_Base_Base extends Controller_Template
 		DB::start_transaction();
 		try
 		{
-			$res =  $this->$action();
+			$res = $this->$action();
 			if (!$res)
 			{
 				DB::rollback_transaction();
-				return false;;
+				return false;
+				;
 			}
 			DB::commit_transaction();
 		}
@@ -30,44 +31,44 @@ class Controller_Base_Base extends Controller_Template
 		}
 	}
 
-	/*public function special()
-	{
-		$action = $this->request->action;
-		$tmp = explode('_', $action);
-		$type = $tmp[count($tmp) - 1];
+	/* public function special()
+	  {
+	  $action = $this->request->action;
+	  $tmp = explode('_', $action);
+	  $type = $tmp[count($tmp) - 1];
 
-		switch ($type)
-		{
-			case 'do':
-				$action = 'action_' . $action . '_transaction';
-				if (is_callable([$this, $action]))
-				{
-					DB::start_transaction();
-					try
-					{
-						$view = $this->$action();
-						if (!$view)
-						{
-							throw new Exception();
-						}
-						DB::commit_transaction();
-					}
-					catch (Exception $e)
-					{
-						DB::rollback_transaction();
-					}
-				}
-				else
-				{
-					throw new \HttpNotFoundException();
-				}
-				break;
-			default:
-				break;
-		}
+	  switch ($type)
+	  {
+	  case 'do':
+	  $action = 'action_' . $action . '_transaction';
+	  if (is_callable([$this, $action]))
+	  {
+	  DB::start_transaction();
+	  try
+	  {
+	  $view = $this->$action();
+	  if (!$view)
+	  {
+	  throw new Exception();
+	  }
+	  DB::commit_transaction();
+	  }
+	  catch (Exception $e)
+	  {
+	  DB::rollback_transaction();
+	  }
+	  }
+	  else
+	  {
+	  throw new \HttpNotFoundException();
+	  }
+	  break;
+	  default:
+	  break;
+	  }
 
-		$this->template->content = $view;
-	}*/
+	  $this->template->content = $view;
+	  } */
 
 	public function pre($type)
 	{
@@ -116,9 +117,9 @@ class Controller_Base_Base extends Controller_Template
 		}
 
 		// authentication
-		/*$flg = false;
+		$flg = false;
 		list($need, $action_list, $both_list) = $this->get_onoff(Config::get($type . '.auth'));
-		if (empty($both) || !in_array($action, $both))
+		if (empty($both_list) || !in_array($action, $both_list))
 		{
 			if ($this->is_login())
 			{
@@ -132,7 +133,7 @@ class Controller_Base_Base extends Controller_Template
 		if ($flg)
 		{
 			return Response::redirect((($type == 'site') ? '' : $type) . '/auth');
-		}*/
+		}
 	}
 
 	private function get_onoff($config)
@@ -338,7 +339,7 @@ class Controller_Base_Base extends Controller_Template
 		return (Input::method() == 'POST');
 	}
 
-	protected function check_condition($c,$val)
+	protected function check_condition($c, $val)
 	{
 		if (!$val->run($c))
 		{
@@ -419,9 +420,6 @@ class Controller_Base_Base extends Controller_Template
 	{
 		$bt = debug_backtrace();
 		$key = $bt[1]['class'] . '/' . $bt[1]['function'];
-		
-		$pageFirst = false;
-
 		$c = Session::get($key);
 		//$c = Common::getCookie($key);
 
@@ -431,7 +429,6 @@ class Controller_Base_Base extends Controller_Template
 		$in = array_merge(Input::param(), $another); // パラメータ以外の条件あればマージ
 		if (count($in) > 0)
 		{
-			$pageFirst = true;
 			$disuse = array_diff_key($c, $in); // 外された条件を抽出
 			foreach ($disuse as $k => $v)
 			{
@@ -443,31 +440,7 @@ class Controller_Base_Base extends Controller_Template
 		Session::set($key, $c);
 		//Common::setCookie($key, $c);
 
-
-		// ページャ用のgetパラメータを生成
-		$param = [];
-		foreach ($c as $k => $v)
-		{
-			if (is_array($v))
-			{
-				foreach ($v as $item)
-				{
-					$param[] = $k . '[]=' . $item;
-				}
-			}
-			else
-			{
-				if ($k == 'p')
-				{
-					continue;
-				}
-				$param[] = $k . '=' . $v;
-			}
-		}
-		$param = implode('&', $param);
-
-
-		return [$c, @$c['order'], max(@$c['p'], 1), $param];
+		return $c;
 	}
 
 	protected function get_upload_file($config)

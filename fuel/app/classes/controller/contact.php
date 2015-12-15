@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Contact extends Controller_Basesite
+class Controller_Contact extends Controller_Base_Site
 {
 
 	private function get_form()

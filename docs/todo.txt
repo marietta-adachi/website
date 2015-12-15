@@ -4,23 +4,22 @@ ok	サーバエラーはエラー画面に
 ok	last login
 ok	jsへの値渡し簡潔に
 ok	UserModelにログイン関数
+ok	フォントメイリオ
+ok	認証判定
 o	トランザクション簡潔に
 o	操作ログ
 o	bootstrap対応
+	検索条件の考慮
+
+
+
+
 	MySQL文字化け
 
-	フォントメイリオ
-	認証判定
 	httpsリダイレクト
 	Exception種類
-	
-
-
-
 
 	多言語（langに）
-
-
 
 	plantUML
 	sqlgenのmysql対応

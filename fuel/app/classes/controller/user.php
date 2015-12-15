@@ -1,6 +1,6 @@
 <?php
 
-class Controller_User extends Controller_Basesite
+class Controller_User extends Controller_Base_Site
 {
 
 	public function action_index()

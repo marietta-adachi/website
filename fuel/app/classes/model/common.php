@@ -231,16 +231,49 @@ class Common
 class Page
 {
 
-	public static function get_page($action, $count, $crrPage, $limit = 100, $name = 'bootstrap3_ma')
+	public static function get_page($action, $c,$count,  $per_page = 10, $name = 'bootstrap3_ma')
 	{
+		$segment = 'p';
+
+		// ページ数
+		$crr_page = 1;
+		if (array_key_exists($segment, $c))
+		{
+			if (is_numeric($c[$segment]))
+			{
+				$crr_page = (int) $c[$segment];
+			}
+		}
+
+		// ページャ用GETパラメータ生成
+		$get_param = [];
+		foreach ($c as $k => $v)
+		{
+			if (is_array($v))
+			{
+				foreach ($v as $item)
+				{
+					$get_param[] = $k . '[]=' . $item;
+				}
+			}
+			else
+			{
+				if ($k != $segment)
+				{
+					$get_param[] = $k . '=' . $v;
+				}
+			}
+		}
+		$get_param = '?' . implode('&', $get_param);
+
+
 		$config = array(
 			'name' => 'default',
 			'total_items' => $count,
-			'per_page' => $limit,
-			'uri_segment' => 'p', // クエリ文字列のパラメータ名
-			//'uri_segment' => 0,
-			'current_page' => isset($crrPage) ? $crrPage : '1',
-			'pagination_url' => URI::create($action),
+			'per_page' => $per_page,
+			'uri_segment' => $segment,
+			'current_page' => $crr_page,
+			'pagination_url' => $action . $get_param,
 			'num_links' => 2,
 			'show_first' => true,
 			'show_last' => true,

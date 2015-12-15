@@ -55,16 +55,11 @@
 	</head>
 
 	<body class="nav-md">
-		<div class="container body">
-			<div class="main_container">
-
-				{* 条件によって外観切り替え *}
-				{if $login || $screen == 'error/404' || $screen == 'error/404'}
-					{$content}
-
-				{else if false}
-
-				{else}
+		{if !$login || $screen == 'error/404' || $screen == 'error/404'}
+			{$content}
+		{else}
+			<div class="container body">
+				<div class="main_container">
 					<div class="col-md-3 left_col">
 						{$menu}
 					</div>
@@ -81,8 +76,9 @@
 						{$footer}
 					</div>
 					<input type="hidden" id="message" value="{$info|default}">
-				{/if}
+				</div>
 			</div>
-		</div>
+		{/if}
 	</body>
+	
 </html>

@@ -20,25 +20,23 @@ class Controller_Admin_User extends Controller_Base_Admin
 	public function action_index()
 	{
 		$this->init_condition(['status' => [Status::VALID, Status::INVALID], 'order' => 'id']);
-		list($c, $o, $p, $param) = $this->get_condition();
+		$d = $this->get_condition();
 
 		$count = 0;
 		$list = [];
 		$page = null;
-		if ($this->check_condition($c, $this->get_validation()))
+		if ($this->check_condition($d, $this->get_validation()))
 		{
-			$count = Model_Db_User::search_count($c);
-			$page = Page::get_page('admin/user', $count, $p, Config::get('admin.page_limit.user'));
-			$list = Model_Db_User::search($c, $o, $page->per_page, $page->offset);
+			$count = Model_Db_User::search_count($d);
+			$page = Page::get_page('admin/user', $d, $count, Config::get('admin.page_limit.user'));
+			$list = Model_Db_User::search($d, $this->order[$d['order']][0], $page->per_page, $page->offset);
 			$page = $page->render();
 		}
 
-		$d = $c;
-		$d['user_list'] = $list;
 		$d['user_count'] = $count;
-		$d['order'] = $o;
+		$d['user_list'] = $list;
 		$d['order_list'] = $this->order;
-		
+
 		$this->template->content = View_Smarty::forge('admin/user/index', $d)->set_safe('pagination', $page);
 	}
 

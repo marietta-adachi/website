@@ -129,8 +129,8 @@ return [
 		],
 		'auth' => [
 			'off' => [
-				'admin/auth/index',
-				'admin/auth/login',
+				'admin_auth_index',
+				'admin_auth_login',
 			],
 			'both' => [
 			],

@@ -26,7 +26,7 @@ class Model_Db_Admin extends Model_Db_Base
 			return false;
 		}
 
-
+Log::info(Auth::hash_password($password));
 		if ($row->admin_password != Auth::hash_password($password))
 		{
 			return false;

@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Error_404 extends Controller_Basesite
+class Controller_Error_404 extends Controller_Base_Site
 {
 
 	public function action_index()
