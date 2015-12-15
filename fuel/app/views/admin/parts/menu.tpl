@@ -6,15 +6,15 @@
 	<div class="clearfix"></div>
 
 	<!-- menu prile quick info -->
-	<!--div class="profile">
+	<div class="profile">
 		<div class="profile_pic">
 			<img src="assets/img/admin/user.jpg" alt="..." class="img-circle profile_img">
 		</div>
 		<div class="profile_info">
-			<span>aaa</span>
-			<h2>{$user|default:'USER'}</h2>
+			<span>{$user.admin_last_login}</span>
+			<h2>{$user.admin_name}</h2>
 		</div>
-	</div-->
+	</div>
 	<!-- /menu prile quick info -->
 
 	<br />

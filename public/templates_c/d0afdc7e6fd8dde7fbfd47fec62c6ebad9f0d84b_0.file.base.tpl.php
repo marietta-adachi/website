@@ -1,17 +1,17 @@
 <?php
-/* Smarty version 3.1.28-dev/77, created on 2015-12-15 19:17:20
+/* Smarty version 3.1.28-dev/77, created on 2015-12-15 15:29:55
   from "D:\workspace\website\fuel\app\views\admin\base.tpl" */
 
 if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl, array (
   'has_nocache_code' => false,
   'version' => '3.1.28-dev/77',
-  'unifunc' => 'content_566fe8b0ddc970_64779893',
+  'unifunc' => 'content_567023e34c7640_33313764',
   'file_dependency' => 
   array (
     'd0afdc7e6fd8dde7fbfd47fec62c6ebad9f0d84b' => 
     array (
       0 => 'D:\\workspace\\website\\fuel\\app\\views\\admin\\base.tpl',
-      1 => 1450174624,
+      1 => 1450189792,
       2 => 'file',
     ),
   ),
@@ -19,7 +19,7 @@ if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl,
   array (
   ),
 ),false)) {
-function content_566fe8b0ddc970_64779893 ($_smarty_tpl) {
+function content_567023e34c7640_33313764 ($_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -105,7 +105,7 @@ function content_566fe8b0ddc970_64779893 ($_smarty_tpl) {
 	</head>
 
 	<body class="nav-md">
-		<?php if ($_smarty_tpl->tpl_vars['login']->value || $_smarty_tpl->tpl_vars['screen']->value == 'error/404' || $_smarty_tpl->tpl_vars['screen']->value == 'error/404') {?>
+		<?php if (!$_smarty_tpl->tpl_vars['login']->value || $_smarty_tpl->tpl_vars['screen']->value == 'error/404' || $_smarty_tpl->tpl_vars['screen']->value == 'error/404') {?>
 			<?php echo $_smarty_tpl->tpl_vars['content']->value;?>
 
 		<?php } else { ?>

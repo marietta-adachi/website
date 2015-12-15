@@ -30,10 +30,9 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 	public function action_login()
 	{
 
-		$d = $this->check();
+		$d = $this->check($this->get_form());
 		if (!$d)
 		{
-			$this->set_error($val);
 			$this->action_index();
 			return;
 		}

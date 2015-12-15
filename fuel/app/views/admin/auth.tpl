@@ -20,6 +20,7 @@
 					</div>
 					<div>
 						<a class="btn btn-default submit" href="index.html">Log in</a>
+						<button tyoe="submit" value="ログイン"></button>
 						<a class="reset_pass" href="#">パスワードをお忘れの方はこちら</a>
 					</div>
 					<div class="clearfix"></div>

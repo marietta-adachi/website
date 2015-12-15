@@ -54,7 +54,7 @@
 	</head>
 
 	<body class="nav-md">
-		{if $login || $screen == 'error/404' || $screen == 'error/404'}
+		{if !$login || $screen == 'error/404' || $screen == 'error/404'}
 			{$content}
 		{else}
 			<div class="container body">

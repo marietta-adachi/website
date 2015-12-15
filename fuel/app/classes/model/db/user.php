@@ -125,17 +125,17 @@ class Model_Db_User extends Model_Db_Base
 		$p = [];
 		$sql .= ' where true ';
 		$sql .= ' and u.user_status = ' . Status::VALID;
-		if (!empty($c['name']))
+		if (!empty($c['freeword']))
 		{
-			$sql.= ' and u.user_name like :name ';
-			$p['name'] = '%' . $c['name'] . '%';
+			$sql.= ' and (false ';
+			$sql.= ' or u.user_name like :name ';
+			$p['name'] = '%' . $c['freeword'] . '%';
+			
+			$sql.= ' or u.user_email like :email ';
+			$p['email'] = '%' . $c['freeword'] . '%';
+			$sql.= ' ) ';
 		}
-		if (!empty($c['email']))
-		{
-			$sql.= ' and u.user_name like :email ';
-			$p['email'] = '%' . $c['email'] . '%';
-		}
-
+		
 		/*
 		 * ORDER BY
 		 */

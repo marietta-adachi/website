@@ -72,7 +72,7 @@ class Controller_Base_Base extends Controller_Template
 		}
 		if ($flg)
 		{
-			//return Response::redirect((($type == 'site') ? '' : $type) . '/auth');
+			return Response::redirect((($type == 'site') ? '' : $type) . '/auth');
 		}
 	}
 

@@ -35,5 +35,6 @@ class Controller_Base_Admin extends Controller_Base_Base
 	{
 		return Model_Db_Admin::by_session();
 	}
+	
 
 }

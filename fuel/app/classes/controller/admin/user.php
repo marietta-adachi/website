@@ -8,6 +8,13 @@ class Controller_Admin_User extends Controller_Base_Admin
 		'name' => ['user_name-asc', '順'],
 		'email' => ['user_email-asc', '順'],
 	);
+	private function get_order($d)
+	{
+		$id = @$d['order'];
+		if(array_key_exists($id, $this->order)){
+			return $this->order[$id][0];
+		}
+	}
 
 	private function get_condition_form()
 	{
@@ -16,13 +23,23 @@ class Controller_Admin_User extends Controller_Base_Admin
 		{
 			return $form;
 		}
-		$form->add('freeword', 'フリーワード')->add_rule('max_length', 100);
-		$form->add('status', 'ステータス');
+		$form->add('freeword', '')->add_rule('max_length', 100);
+		$form->add('status', '');
+		$form->add('p', '');
+		$form->add('oeder', '');
 		return $form;
 	}
 
 	public function action_index()
 	{
+		//debug
+		$row = Model_Db_User::anew();
+		$row->user_name = 'てすと　たろう';
+		$row->user_email = Str::lower(Str::random('alpha', 10)).'@'.Str::lower(Str::random('alpha', 5)).'.co.jp';
+		$row->user_status = Status::VALID;
+		$row->user_password = Auth::hash_password('123456');
+		$row->save();
+
 		$this->init_condition(['status' => [Status::VALID, Status::INVALID], 'order' => 'id']);
 
 		$count = 0;
@@ -34,12 +51,12 @@ class Controller_Admin_User extends Controller_Base_Admin
 			$d = $this->get_condition($d);
 			$count = Model_Db_User::search_count($d);
 			$page = Page::get_page('admin/user', $d, $count, Config::get('admin.page_limit.user'));
-			$list = Model_Db_User::search($d, $this->order[$d['order']][0], $page->per_page, $page->offset);
+			$list = Model_Db_User::search($d, $this->get_order($d), $page->per_page, $page->offset);
 			$page = $page->render();
 		}
 
-		$d['user_count'] = $count;
-		$d['user_list'] = $list;
+		$d['count'] = $count;
+		$d['list'] = $list;
 		$d['order_list'] = $this->order;
 
 		$this->template->content = View_Smarty::forge('admin/user/index', $d)->set_safe('pagination', $page);

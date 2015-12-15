@@ -1,27 +1,50 @@
-<script>
-	$(function () {
+<form id="ma_form" method="get" action="admin/user">
+	<input type="hidden" name="search" value="1" />
+	フリーワード：<input type="text" name="freeword" value="{$freeword|default}" onkeydown="search();" /><br/>
+	ステータス：
+	{foreach from=Status::$name key=k item=v}
+		<input type="checkbox" name="status[]" onchange="search_select()" value="{$k}" {if in_array($k, $status|default:[])}checked="checked"{/if}>{$v}
+	{/foreach}<br/>
+	<button type="submit" class="btn btn-primary">検索</button>
+</form>
+<a href='/'>sdfgsdfg</a>
+<div class="clearfix"></div>
+<button type="submit" class="btn btn-primary">新規登録</button>
 
-	});
-	
-	var Address = {
-		byZip: function (zipcode) {
-			var defer = $.Deferred();
-			$.get({
-				url: "admin/rest/ajax/address/" + zipcode,
-				dataType: "jsonp",
-				success: defer.resolve,
-				error: defer.reject
-			});
-			return defer.promise();
-		}
-	};
-
-	$("#button").on("click", function () {
-		Address.search("jquery deferred").done(function (data) {
-			console.log(data);
-		});
-	});
-</script>
+<div class="clearfix"></div>
+{$pagination|default}
+<div class="clearfix"></div>
+{$count}件
+<div>
+	{if count($list) > 0}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>お名前</th>
+					<th>メールアドレス</th>
+					<th>ステータス</th>
+					<th>詳細</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach from=$list item=row}
+				<tr>
+					<th scope="row">{$row.user_id}</th>
+					<td>{$row.user_name}</td>
+					<td>{$row.user_email}</td>
+					<td>{$row.user_status}</td>
+					<td><input type="button" value="詳細" onclick="location.href = 'admin/user/edit?operation=2'" /></td>
+				</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	{else}
+		該当データがありません。
+	{/if}
+</div>
+<div class="clearfix"></div>
+{*
 <div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
 		<div class="x_title">
@@ -79,33 +102,33 @@
 		</div>
 	</div>
 </div>
-
-
-{*
-<form id="ma_form" method="get" action="admin/hospital">
-<input type="hidden" name="search" value="1" />
-
-
-
-フリーワード検索：<input type="text" name="free_word" value="{$free_word|default:''}" onkeydown="search();" /><br/>
-ステータス：
-{foreach from=HospitalStatus::$name key=k item=v}
-<input type="checkbox" name="status[]" onchange="search_select()" value="{$k}" {if in_array($k, $status|default:array())}checked="checked"{/if}>{$v}
-{/foreach}<br/>
-</form>
-
-<br/>
-<input type="button" value="新規登録" onclick="location.href = 'admin/vendor/edit'" class="btn btn-primary btn-sizeFix"/>
-
-<br/>
-{$pagination|default}
-<br/>
-{$count}件
-<div>
-{if count($user_list) > 0}
-
-{else}
-該当データがありません。
-{/if}
-</div>
 *}
+<script>
+	$('li.active>a, li.disabled>a').click(function(){
+		return false;
+	});
+
+	
+	$(function(){
+
+	});
+
+	/*var Address = {
+		byZip: function (zipcode) {
+			var defer = $.Deferred();
+			$.get({
+				url: "admin/rest/ajax/address/" + zipcode,
+				dataType: "jsonp",
+				success: defer.resolve,
+				error: defer.reject
+			});
+			return defer.promise();
+		}
+	};
+
+	$("#button").on("click", function () {
+		Address.search("jquery deferred").done(function (data) {
+			console.log(data);
+		});
+	});*/
+</script>

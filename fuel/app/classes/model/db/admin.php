@@ -26,8 +26,9 @@ class Model_Db_Admin extends Model_Db_Base
 			return false;
 		}
 
-Log::info(Auth::hash_password($password));
-		if ($row->admin_password != Auth::hash_password($password))
+
+		//if ($row->admin_password != Auth::hash_password($password))
+		if ($row->admin_password != $password)
 		{
 			return false;
 		}
@@ -57,6 +58,11 @@ Log::info(Auth::hash_password($password));
 	public function get_id()
 	{
 		return $this->admin_id;
+	}
+
+	public function get_name()
+	{
+		return $this->admin_name;
 	}
 
 }
