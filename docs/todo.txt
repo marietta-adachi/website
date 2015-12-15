@@ -9,17 +9,25 @@ ok	認証判定
 o	トランザクション簡潔に
 o	操作ログ
 o	bootstrap対応
-	検索条件の考慮
+o	検索条件の考慮
 
 
 
+	APIGEN
 
-	MySQL文字化け
-
-	httpsリダイレクト
-	Exception種類
-
-	多言語（langに）
 
 	plantUML
+	httpsリダイレクト
+	Exception種類
+	MySQL文字化け
+
+	多言語（langに）
 	sqlgenのmysql対応
+
+	JS
+		ファイルサイズチェック
+		ローディング
+		住所検索
+
+		ajax
+			http://blog.toshimaru.net/jquery-ajaxdeferredajax/

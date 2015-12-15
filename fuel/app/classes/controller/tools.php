@@ -1,11 +1,16 @@
 <?php
 
-class Controller_Tools extends Controller_Base_Site
+class Controller_Tools extends Controller_Base_Admin
 {
 
 	public function action_404()
 	{
 		$this->template->content = View_Smarty::forge('error/404');
+	}
+
+	public function action_500()
+	{
+		$this->template->content = View_Smarty::forge('error/500');
 	}
 
 	public function action_initialize($token)

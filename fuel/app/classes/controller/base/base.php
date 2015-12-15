@@ -10,66 +10,6 @@ class Controller_Base_Base extends Controller_Template
 	protected $_h1 = '';
 	protected $_errors = [];
 
-	protected function transaction($action)
-	{
-		DB::start_transaction();
-		try
-		{
-			$res = $this->$action();
-			if (!$res)
-			{
-				DB::rollback_transaction();
-				return false;
-				;
-			}
-			DB::commit_transaction();
-		}
-		catch (Exception $e)
-		{
-			DB::rollback_transaction();
-			throw new \HttpServerErrorException();
-		}
-	}
-
-	/* public function special()
-	  {
-	  $action = $this->request->action;
-	  $tmp = explode('_', $action);
-	  $type = $tmp[count($tmp) - 1];
-
-	  switch ($type)
-	  {
-	  case 'do':
-	  $action = 'action_' . $action . '_transaction';
-	  if (is_callable([$this, $action]))
-	  {
-	  DB::start_transaction();
-	  try
-	  {
-	  $view = $this->$action();
-	  if (!$view)
-	  {
-	  throw new Exception();
-	  }
-	  DB::commit_transaction();
-	  }
-	  catch (Exception $e)
-	  {
-	  DB::rollback_transaction();
-	  }
-	  }
-	  else
-	  {
-	  throw new \HttpNotFoundException();
-	  }
-	  break;
-	  default:
-	  break;
-	  }
-
-	  $this->template->content = $view;
-	  } */
-
 	public function pre($type)
 	{
 		Config::load('base');
@@ -132,7 +72,7 @@ class Controller_Base_Base extends Controller_Template
 		}
 		if ($flg)
 		{
-			return Response::redirect((($type == 'site') ? '' : $type) . '/auth');
+			//return Response::redirect((($type == 'site') ? '' : $type) . '/auth');
 		}
 	}
 
@@ -339,14 +279,15 @@ class Controller_Base_Base extends Controller_Template
 		return (Input::method() == 'POST');
 	}
 
-	protected function check_condition($c, $val)
+	protected function verify($form)
 	{
-		if (!$val->run($c))
+		$val = $form->validation();
+		if (!$val->run())
 		{
 			$this->set_error($val);
 			return false;
 		}
-		return true;
+		return $val->validated();
 	}
 
 	protected function check($form, $through = false)
@@ -416,32 +357,90 @@ class Controller_Base_Base extends Controller_Template
 		}
 	}
 
-	protected function get_condition($another = [])
+	protected function get_condition($in)
 	{
 		$bt = debug_backtrace();
 		$key = $bt[1]['class'] . '/' . $bt[1]['function'];
+
 		$c = Session::get($key);
 		//$c = Common::getCookie($key);
 
 		$c = empty($c) ? [] : $c;
-
-		// 今回の条件で不要になった条件を取り除く
-		$in = array_merge(Input::param(), $another); // パラメータ以外の条件あればマージ
 		if (count($in) > 0)
 		{
+			// 不要条件を取り除く
 			$disuse = array_diff_key($c, $in); // 外された条件を抽出
 			foreach ($disuse as $k => $v)
 			{
 				unset($c[$k]); // 外された分を削除
 			}
 		}
-		// 更に今回の条件をマージし、セッションに保存しておく
 		$c = array_merge($c, $in);
+
 		Session::set($key, $c);
 		//Common::setCookie($key, $c);
 
 		return $c;
 	}
+
+	protected function transaction($action)
+	{
+		DB::start_transaction();
+		try
+		{
+			$res = $this->$action();
+			if (!$res)
+			{
+				DB::rollback_transaction();
+				return false;
+			}
+			DB::commit_transaction();
+		}
+		catch (Exception $e)
+		{
+			DB::rollback_transaction();
+			throw new \HttpServerErrorException();
+		}
+	}
+
+	/* public function special()
+	  {
+	  $action = $this->request->action;
+	  $tmp = explode('_', $action);
+	  $type = $tmp[count($tmp) - 1];
+
+	  switch ($type)
+	  {
+	  case 'do':
+	  $action = 'action_' . $action . '_transaction';
+	  if (is_callable([$this, $action]))
+	  {
+	  DB::start_transaction();
+	  try
+	  {
+	  $view = $this->$action();
+	  if (!$view)
+	  {
+	  throw new Exception();
+	  }
+	  DB::commit_transaction();
+	  }
+	  catch (Exception $e)
+	  {
+	  DB::rollback_transaction();
+	  }
+	  }
+	  else
+	  {
+	  throw new \HttpNotFoundException();
+	  }
+	  break;
+	  default:
+	  break;
+	  }
+
+	  $this->template->content = $view;
+	  } */
 
 	protected function get_upload_file($config)
 	{

@@ -1,17 +1,17 @@
 <?php
-/* Smarty version 3.1.28-dev/77, created on 2015-12-15 13:56:15
+/* Smarty version 3.1.28-dev/77, created on 2015-12-15 19:17:20
   from "D:\workspace\website\fuel\app\views\admin\base.tpl" */
 
 if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl, array (
   'has_nocache_code' => false,
   'version' => '3.1.28-dev/77',
-  'unifunc' => 'content_566f9d6f4d9b57_19262069',
+  'unifunc' => 'content_566fe8b0ddc970_64779893',
   'file_dependency' => 
   array (
     'd0afdc7e6fd8dde7fbfd47fec62c6ebad9f0d84b' => 
     array (
       0 => 'D:\\workspace\\website\\fuel\\app\\views\\admin\\base.tpl',
-      1 => 1450155369,
+      1 => 1450174624,
       2 => 'file',
     ),
   ),
@@ -19,7 +19,7 @@ if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl,
   array (
   ),
 ),false)) {
-function content_566f9d6f4d9b57_19262069 ($_smarty_tpl) {
+function content_566fe8b0ddc970_64779893 ($_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -66,13 +66,12 @@ function content_566f9d6f4d9b57_19262069 ($_smarty_tpl) {
 
 		<?php echo Asset::css('gentelella/production/css/animate.min.css');?>
 
-
 		<!-- Custom styling plus plugins -->
 		<?php echo Asset::css('gentelella/production/css/custom.css');?>
 
 		<?php echo Asset::css('gentelella/production/css/icheck/flat/green.css');?>
 
-
+		<!-- JS -->
 		<?php echo Asset::js('gentelella/production/js/jquery.min.js');?>
 
 		<?php echo Asset::js('gentelella/production/js/custom.js');?>
@@ -106,7 +105,7 @@ function content_566f9d6f4d9b57_19262069 ($_smarty_tpl) {
 	</head>
 
 	<body class="nav-md">
-		<?php if (!$_smarty_tpl->tpl_vars['login']->value || $_smarty_tpl->tpl_vars['screen']->value == 'error/404' || $_smarty_tpl->tpl_vars['screen']->value == 'error/404') {?>
+		<?php if ($_smarty_tpl->tpl_vars['login']->value || $_smarty_tpl->tpl_vars['screen']->value == 'error/404' || $_smarty_tpl->tpl_vars['screen']->value == 'error/404') {?>
 			<?php echo $_smarty_tpl->tpl_vars['content']->value;?>
 
 		<?php } else { ?>

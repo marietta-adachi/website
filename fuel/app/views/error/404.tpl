@@ -5,7 +5,7 @@
 			<h2>Sorry but we couldnt find this page</h2>
 			<p>This page you are looking for does not exsist <a href="#">Report this?</a>
 			</p>
-			<div class="mid_center">
+			<!--div class="mid_center">
 				<h3>Search</h3>
 				<form>
 					<div class="col-xs-12 form-group pull-right top_search">
@@ -17,7 +17,7 @@
 						</div>
 					</div>
 				</form>
-			</div>
+			</div-->
 		</div>
 	</div>
 </div>

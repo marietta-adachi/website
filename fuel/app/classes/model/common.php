@@ -194,7 +194,7 @@ class Common
 	public static function get_device($level = 1)
 	{
 		require_once APPPATH . 'vendor/Mobile-Detect-2.8.17/Mobile_Detect.php';
-		
+
 		$md = new Mobile_Detect();
 
 		if ($md->isMobile())
@@ -231,7 +231,7 @@ class Common
 class Page
 {
 
-	public static function get_page($action, $c,$count,  $per_page = 10, $name = 'bootstrap3_ma')
+	public static function get_page($action, $c, $count, $per_page = 10, $name = 'bootstrap3_ma')
 	{
 		$segment = 'p';
 

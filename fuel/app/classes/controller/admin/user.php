@@ -9,24 +9,29 @@ class Controller_Admin_User extends Controller_Base_Admin
 		'email' => ['user_email-asc', '順'],
 	);
 
-	private function get_validation()
+	private function get_condition_form()
 	{
-		$val = Validation::instance();
-		$val->add('freeword', 'フリーワード')->add_rule('max_length', 100);
-		$val->add('status', 'ステータス');
-		return $val;
+		$form = Fieldset::instance();
+		if (count($form->field()) > 0)
+		{
+			return $form;
+		}
+		$form->add('freeword', 'フリーワード')->add_rule('max_length', 100);
+		$form->add('status', 'ステータス');
+		return $form;
 	}
 
 	public function action_index()
 	{
 		$this->init_condition(['status' => [Status::VALID, Status::INVALID], 'order' => 'id']);
-		$d = $this->get_condition();
 
 		$count = 0;
 		$list = [];
 		$page = null;
-		if ($this->check_condition($d, $this->get_validation()))
+		$d = $this->verify($this->get_condition_form());
+		if ($d)
 		{
+			$d = $this->get_condition($d);
 			$count = Model_Db_User::search_count($d);
 			$page = Page::get_page('admin/user', $d, $count, Config::get('admin.page_limit.user'));
 			$list = Model_Db_User::search($d, $this->order[$d['order']][0], $page->per_page, $page->offset);

@@ -24,16 +24,15 @@
 		{Asset::add_path('assets/lib/','css')}
 		{Asset::add_path('assets/font/','css')}
 
-		{* Bootstrap *}
+		{* GENTELELLA *}
 		<!-- Bootstrap core CSS -->
 		{Asset::css('gentelella/production/css/bootstrap.min.css')}
 		{Asset::css('gentelella/production/fonts/css/font-awesome.min.css')}
 		{Asset::css('gentelella/production/css/animate.min.css')}
-
 		<!-- Custom styling plus plugins -->
 		{Asset::css('gentelella/production/css/custom.css')}
 		{Asset::css('gentelella/production/css/icheck/flat/green.css')}
-
+		<!-- JS -->
 		{Asset::js('gentelella/production/js/jquery.min.js')}
 		{Asset::js('gentelella/production/js/custom.js')}
 
@@ -55,7 +54,7 @@
 	</head>
 
 	<body class="nav-md">
-		{if !$login || $screen == 'error/404' || $screen == 'error/404'}
+		{if $login || $screen == 'error/404' || $screen == 'error/404'}
 			{$content}
 		{else}
 			<div class="container body">
