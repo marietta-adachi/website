@@ -18,68 +18,37 @@ class Controller_Auth extends Controller_Base_Site
 
 	public function action_index()
 	{
-		$form = $this->get_form();
-		if (Input::method() === 'POST')
+		$d = [];
+		if ($this->is_post())
 		{
-			$form->repopulate();
+			$d = $this->get_form()->repopulate()->input();
 		}
-		$data = $form->input();
-		$this->template->content = View_Smarty::forge('auth', $data);
+		$this->template->content = View_Smarty::forge('login', $d);
 	}
 
 	public function action_login()
 	{
-		try
+		$d = $this->verify($this->get_form());
+		if (!$d)
 		{
-			$val = $this->get_form()->validation();
-			if (!$val->run())
-			{
-				$this->set_error($val);
-			}
-			$data = $val->validated();
-
-			$admin = Model_Db_Admin::find_one_by(array('admin_email' => $data['email'], 'admin_status' => AdminStatus::VALID,));
-			if (empty($admin))
-			{
-				$this->set_error('IDまたはパスワードが違います');
-			}
-			if ($admin->admin_password != Auth::hash_password($data['password']))
-			{
-				$this->set_error('IDまたはパスワードが違います');
-			}
-
-			// start session
-			Session::create();
-			$close = !(boolean) $data['remember'];
-			Session::set('expire_on_close', $close);
-			Session::set('admin', $admin);
-
-			return Response::redirect('admin');
-		}
-		catch (Exception $e)
-		{
-			$this->error($e);
 			$this->action_index();
+			return;
 		}
+
+		if (!Model_Db_Admin::login($d['email'], $d['password'], $d['remember']))
+		{
+			$this->msg('メールアドレスまたはパスワードが違います');
+			$this->action_index();
+			return;
+		}
+
+		return Response::redirect('index');
 	}
 
 	public function action_logout()
 	{
-		try
-		{
-			$this->logout();
-			return Response::redirect('admin');
-		}
-		catch (Exception $e)
-		{
-			$this->error($e);
-		}
-	}
-
-	public static function logout()
-	{
-		Cookie::delete('');
-		Session::destroy();
+		$Model_Db_Admin::logout();
+		return Response::redirect('/');
 	}
 
 }

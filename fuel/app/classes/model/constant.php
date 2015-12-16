@@ -1,6 +1,6 @@
 <?php
 
-class Operation
+class Ope
 {
 
 	const ADD = 1;
@@ -9,7 +9,7 @@ class Operation
 
 }
 
-class Status
+class St
 {
 
 	const VALID = 1;

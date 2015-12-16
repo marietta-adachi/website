@@ -18,19 +18,17 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 
 	public function action_index()
 	{
-		$form = $this->get_form();
+		$d = [];
 		if ($this->is_post())
 		{
-			$form->repopulate();
+			$d = $this->get_form()->repopulate()->input();
 		}
-		$d = $form->input();
 		$this->template->content = View_Smarty::forge('admin/login', $d);
 	}
 
 	public function action_login()
 	{
-
-		$d = $this->check($this->get_form());
+		$d = $this->verify($this->get_form());
 		if (!$d)
 		{
 			$this->action_index();
@@ -39,7 +37,7 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 
 		if (!Model_Db_Admin::login($d['email'], $d['password'], $d['remember']))
 		{
-			$this->set_error('メールアドレスまたはパスワードが違います');
+			$this->msg('メールアドレスまたはパスワードが違います');
 			$this->action_index();
 			return;
 		}

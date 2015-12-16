@@ -55,7 +55,7 @@ class Model_Db_User extends Model_Db_Base
 
 	public static function by_id($id)
 	{
-		parent::find_by_pk($id);
+		return parent::find_by_pk($id);
 	}
 
 	public static function anew()
@@ -124,7 +124,7 @@ class Model_Db_User extends Model_Db_Base
 		 */
 		$p = [];
 		$sql .= ' where true ';
-		$sql .= ' and u.user_status = ' . Status::VALID;
+		$sql .= ' and u.user_status = ' . St::VALID;
 		if (!empty($c['freeword']))
 		{
 			$sql.= ' and (false ';
