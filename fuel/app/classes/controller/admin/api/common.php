@@ -1,12 +1,9 @@
 <?php
 
-/**
- * Ajax用コントローラ
- */
-class Controller_Admin_Rest_Ajax_Ul extends Controller_Baseajax
+class Controller_Admin_Api_Common extends Controller_Base_Api
 {
 
-	public function action_chart()
+	public function action_upload_image()
 	{
 		try
 		{

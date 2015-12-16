@@ -1,33 +1,24 @@
-ok	クエリ結果をbeanに
-ok	404は画像系以外は404ページに
-ok	サーバエラーはエラー画面に
-ok	last login
-ok	jsへの値渡し簡潔に
-ok	UserModelにログイン関数
-ok	フォントメイリオ
-ok	認証判定
-o	トランザクション簡潔に
-o	操作ログ
-o	bootstrap対応
-o	検索条件の考慮
+
+	SSL判定
+	メタ埋め込みの仕組み
+		tplに定義し、JSでくみたてる
 
 
-
-	APIGEN
-
-	hrefの#
-	plantUML
-	httpsリダイレクト
 	Exception種類
-	MySQL文字化け
-
 	多言語（langに）
-	sqlgenのmysql対応
 
 	JS
 		ファイルサイズチェック
 		ローディング
 		住所検索
-
 		ajax
 			http://blog.toshimaru.net/jquery-ajaxdeferredajax/
+
+
+開発支援
+	plantUML
+	APIGEN
+	sqlgenのmysql対応
+
+
+	

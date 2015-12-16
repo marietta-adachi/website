@@ -29,6 +29,8 @@ FooterRight=
 ShowPageoutRelation=1
 RDBMSType=5
 RDBMSTypeName=MySQL
+GenerateDropTableStatement=1
+DropTableIfExists=1
 DefaultPkName=%0:s_PKC
 DefaultPkIndexName=%0:s_PKI
 DefaultIndexName=%0:s_IX%1:d
@@ -42,7 +44,7 @@ PName=operation_log
 LName=operation_log
 Comment=
 TableOption=
-Page=Main
+Page=MAIN
 Left=600
 Top=550
 Field="operation_log_id","operation_log_id","bigint","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
@@ -59,7 +61,7 @@ EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
 ModifiedDateTime=20151214222715
-Position="Main",600,550
+Position="MAIN",600,550
 
 [Entity]
 PName=admin
@@ -81,7 +83,7 @@ Field="admin_deleted_at","admin_deleted_at","timestamp",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20151214192822
+ModifiedDateTime=20151215141935
 Position="MAIN",600,200
 
 [Entity]

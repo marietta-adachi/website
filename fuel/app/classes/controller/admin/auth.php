@@ -24,7 +24,7 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 			$form->repopulate();
 		}
 		$d = $form->input();
-		$this->template->content = View_Smarty::forge('admin/auth', $d);
+		$this->template->content = View_Smarty::forge('admin/login', $d);
 	}
 
 	public function action_login()

@@ -1,9 +1,6 @@
 <?php
 
-/**
- * 
- */
-class Controller_Rest_Ajax_Railway extends Controller_Baseajax
+class Controller_Api_Railway extends Controller_Base_Api
 {
 
 	public function action_get_pref()

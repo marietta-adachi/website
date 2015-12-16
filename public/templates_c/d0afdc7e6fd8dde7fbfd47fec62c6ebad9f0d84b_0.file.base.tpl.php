@@ -1,17 +1,17 @@
 <?php
-/* Smarty version 3.1.28-dev/77, created on 2015-12-15 15:29:55
+/* Smarty version 3.1.28-dev/77, created on 2015-12-16 16:23:46
   from "D:\workspace\website\fuel\app\views\admin\base.tpl" */
 
 if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl, array (
   'has_nocache_code' => false,
   'version' => '3.1.28-dev/77',
-  'unifunc' => 'content_567023e34c7640_33313764',
+  'unifunc' => 'content_5671118235d007_84529720',
   'file_dependency' => 
   array (
     'd0afdc7e6fd8dde7fbfd47fec62c6ebad9f0d84b' => 
     array (
       0 => 'D:\\workspace\\website\\fuel\\app\\views\\admin\\base.tpl',
-      1 => 1450189792,
+      1 => 1450250621,
       2 => 'file',
     ),
   ),
@@ -19,7 +19,7 @@ if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl,
   array (
   ),
 ),false)) {
-function content_567023e34c7640_33313764 ($_smarty_tpl) {
+function content_5671118235d007_84529720 ($_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -115,10 +115,10 @@ function content_567023e34c7640_33313764 ($_smarty_tpl) {
 						<?php echo $_smarty_tpl->tpl_vars['menu']->value;?>
 
 					</div>
-					<!--div class="top_nav">
+					<div class="top_nav">
 						<?php echo $_smarty_tpl->tpl_vars['top']->value;?>
 
-					</div-->
+					</div>
 					<div class="right_col" role="main">
 						<div class="<?php echo $_smarty_tpl->tpl_vars['screen']->value;?>
 ">

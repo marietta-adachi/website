@@ -1,14 +1,8 @@
 <?php
 
-/**
- * 口コミ関連API
- */
-class Controller_Rest_Ajax_Review extends Controller_Baseajax
+class Controller_Api_Review extends Controller_Base_Api
 {
 
-	/**
-	 * 指定病院の口コミ一覧を取得します
-	 */
 	public function action_get()
 	{
 		try
@@ -33,10 +27,6 @@ class Controller_Rest_Ajax_Review extends Controller_Baseajax
 		}
 	}
 
-	/**
-	 * 口コミを登録します
-	 * @throws Exception
-	 */
 	public function action_regist()
 	{
 		try

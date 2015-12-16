@@ -104,31 +104,6 @@
 </div>
 *}
 <script>
-	$('li.active>a, li.disabled>a').click(function(){
-		return false;
-	});
 
-	
-	$(function(){
 
-	});
-
-	/*var Address = {
-		byZip: function (zipcode) {
-			var defer = $.Deferred();
-			$.get({
-				url: "admin/rest/ajax/address/" + zipcode,
-				dataType: "jsonp",
-				success: defer.resolve,
-				error: defer.reject
-			});
-			return defer.promise();
-		}
-	};
-
-	$("#button").on("click", function () {
-		Address.search("jquery deferred").done(function (data) {
-			console.log(data);
-		});
-	});*/
 </script>

@@ -14,7 +14,7 @@ class Controller_Base_Site extends Controller_Base_Base
 	public function after($response)
 	{
 		$response = parent::after($response);
-		$this->post('site',$this->template->content->tplname());
+		$this->post('site', $this->template->content->tplname());
 		return $response;
 	}
 
