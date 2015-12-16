@@ -26,10 +26,10 @@ class Controller_Admin_User extends Controller_Base_Admin
 		{
 			return $form;
 		}
-		$form->add('freeword', '')->add_rule('max_length', 100);
-		$form->add('status', '');
-		$form->add('p', '');
-		$form->add('oeder', '');
+		$form->add('freeword', 'フリーワード')->add_rule('max_length', 100);
+		$form->add('status');
+		$form->add('p');
+		$form->add('oeder');
 		return $form;
 	}
 
@@ -64,8 +64,8 @@ class Controller_Admin_User extends Controller_Base_Admin
 		{
 			return $form;
 		}
-		$form->add('ope', '');
-		$form->add('id', '');
+		$form->add('ope');
+		$form->add('id');
 		$form->add('name', 'お名前')->add_rule('required')->add_rule('max_length', 50);
 		$form->add('email', 'メールアドレス')->add_rule('required');
 		$form->add('status', 'ステータス')->add_rule('required');
