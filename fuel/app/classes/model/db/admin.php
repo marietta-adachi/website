@@ -51,8 +51,7 @@ class Model_Db_Admin extends Model_Db_Base
 
 	public static function by_session()
 	{
-		$bean = Session::get('admin');
-		return $bean;
+		return Session::get('admin');
 	}
 
 	public function get_id()
@@ -65,6 +64,9 @@ class Model_Db_Admin extends Model_Db_Base
 		return $this->admin_name;
 	}
 
-}
-?>
+	public function get_XXXXX()
+	{
+		
+	}
 
+}

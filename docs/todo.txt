@@ -3,7 +3,8 @@
 	メタ埋め込みの仕組み
 		tplに定義し、JSでくみたてる
 
-
+	Common::now()
+	
 	Exception種類
 	多言語（langに）
 

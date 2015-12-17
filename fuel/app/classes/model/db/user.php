@@ -49,8 +49,7 @@ class Model_Db_User extends Model_Db_Base
 
 	public static function by_session()
 	{
-		$bean = Session::get('user');
-		return $bean;
+		return Session::get(self::$_table_nam);
 	}
 
 	public static function by_id($id)
@@ -82,13 +81,13 @@ class Model_Db_User extends Model_Db_Base
 		return $tmp;
 	}
 
-	public static function unique_name($name)
+	public static function unique_name($id, $name)
 	{
 		$list = self::exec('select user_id from user where user_name = :name', ['name' => $name]);
 		return count($list) == 0;
 	}
 
-	public static function unique_email($email)
+	public static function unique_email($id, $email)
 	{
 		$list = self::exec('select user_id from user where user_email = :email', ['email' => $email]);
 		return count($list) == 0;
