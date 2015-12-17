@@ -8,7 +8,7 @@ class Controller_Base_Base extends Controller_Template
 	protected $_custom_description = '';
 	protected $_breadcrumb = [];
 	protected $_h1 = '';
-	protected $_errors = [];
+	protected $_messages = [];
 
 	public function pre($type)
 	{
@@ -118,7 +118,7 @@ class Controller_Base_Base extends Controller_Template
 		$this->template->set_global('status_code', $this->response_status);
 
 		// error
-		$this->template->set_global('errors', $this->_errors);
+		$this->template->set_global('msgs', $this->_messages);
 
 		// device
 		$this->template->set_global('device', Common::get_device());
@@ -279,29 +279,33 @@ class Controller_Base_Base extends Controller_Template
 		return (Input::method() == 'POST');
 	}
 
-	protected function verify($form)
+	protected function verify_criteria($form)
 	{
 		$val = $form->validation();
 		if (!$val->run())
 		{
-			$this->set_error($val);
+			$this->msg($val);
 			return false;
 		}
 		return $val->validated();
 	}
 
-	protected function check($form, $through = false)
+	protected function verify_csrf()
 	{
 		if (!Security::check_token())
 		{
 			Common::error(new Exception('CSRF Error'));
 			Response::redirect('/');
 		}
+	}
+
+	protected function verify($form, $through = false)
+	{
 
 		$val = $form->validation();
 		if (!$val->run())
 		{
-			$this->set_error($val);
+			$this->msg($val);
 			if ($through)
 			{
 				return $val->input();
@@ -314,31 +318,31 @@ class Controller_Base_Base extends Controller_Template
 		return $val->validated();
 	}
 
-	protected function set_error($obj)
+	protected function msg($obj)
 	{
 		if ($obj instanceof Validation)
 		{
 			foreach ($obj->error() as $field => $err)
 			{
-				$this->_errors[$field] = $err->get_message();
+				$this->_messages[$field] = $err->get_message();
 			}
 		}
 		elseif (is_array($obj))
 		{
 			foreach ($obj as $field => $err)
 			{
-				$this->_errors[$field] = $err;
+				$this->_messages[$field] = $err;
 			}
 		}
 		else
 		{
-			$this->_errors['other'] = $obj;
+			$this->_messages['other'] = $obj;
 		}
 	}
 
 	protected function has_error()
 	{
-		return count($this->_errors) > 0;
+		return count($this->_messages) > 0;
 	}
 
 	protected function set_info($msg)
@@ -346,7 +350,7 @@ class Controller_Base_Base extends Controller_Template
 		$this->template->set_global('info', $msg);
 	}
 
-	protected function init_condition($value = [])
+	protected function init_criteria($value = [])
 	{
 		$flg = Input::param('search');
 		if (empty($flg))
@@ -357,7 +361,7 @@ class Controller_Base_Base extends Controller_Template
 		}
 	}
 
-	protected function get_condition($in)
+	protected function get_criteria($in)
 	{
 		$bt = debug_backtrace();
 		$key = $bt[1]['class'] . '/' . $bt[1]['function'];

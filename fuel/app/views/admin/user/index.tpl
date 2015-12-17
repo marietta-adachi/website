@@ -2,13 +2,13 @@
 	<input type="hidden" name="search" value="1" />
 	フリーワード：<input type="text" class="text" name="freeword" value="{$freeword|default}"/><br/>
 	ステータス：
-	{foreach from=Status::$name key=k item=v}
-		<input type="checkbox" class="selection" name="status[]" onchange="search_select()" value="{$k}" {if in_array($k, $status|default:[])}checked="checked"{/if}>{$v}
+	{foreach from=St::$name key=k item=v}
+		<input type="checkbox" class="selection" name="status[]" value="{$k}" {if in_array($k, $status|default:[])}checked{/if}>{$v}
 	{/foreach}<br/>
 	<!--button type="submit" class="btn btn-primary">検索</button-->
 </form>
 <div class="clearfix"></div>
-<button type="submit" class="btn btn-primary">新規登録</button>
+<button type="button" class="btn btn-primary" onclick="location.href='admin/user/edit?ope={Ope::ADD}'">新規登録</button>
 
 <div class="clearfix"></div>
 {$pagination|default}
@@ -33,7 +33,7 @@
 					<td>{$row.user_name}</td>
 					<td>{$row.user_email}</td>
 					<td>{$row.user_status}</td>
-					<td><input type="button" value="詳細" onclick="location.href = 'admin/user/edit?operation=2'" /></td>
+					<td><button type="button" class="btn btn-default btn-xs" onclick="location.href = 'admin/user/edit?ope={Ope::MODIFY}&id={$row.user_id}'" >詳細</button></td>
 				</tr>
 				{/foreach}
 			</tbody>

@@ -1,21 +1,21 @@
-<form method="post" id="ma_form" action="admin/user/confirm">{Form::csrf()}
-	<input type="hidden" name="operation" value="{$operation|default:''}" />
-	<input type="hidden" name="id" value="{$id|default:''}" />
+<form method="post" id="ma_form" action="admin/user/confirm">
+	<input type="hidden" name="ope" value="{$ope|default}" />
+	<input type="hidden" name="id" value="{$id|default}" />
 
-	お名前：		<input type="text" name="name" value="{$name|default}" maxlength="30" placeholder="" />{$errors.name|default:''}<br/><br/>
+	お名前：		<input type="text" name="name" value="{$name|default}" maxlength="30" placeholder="" />{$msgs.name|default:''}<br/><br/>
 	
-	郵便番号：		<input type="text" name="zipcode" id="zipcode" value="{$zipcode|default}" maxlength="7" placeholder=""/><input type="button" id="auto_address" value="自動入力"/>{$errors.zipcode|default}<br/>
-	都道府県：		<select name="pref_code" id="pref"></select>{$errors.pref_code|default}<br/>
-	市区町村：		<select name="city_code" id="city"></select>{$errors.city_code|default}<br/>
-	町域：			<select name="town_code" id="town"></select>{$errors.town_code|default}<br/>
-	番地・建物名：	<input type="text" name="address" value="{$address|default}" maxlength="" placeholder=""/>{$errors.address|default}<br/><br/>
+	郵便番号：		<input type="text" name="zipcode" id="zipcode" value="{$zipcode|default}" maxlength="7" placeholder=""/><input type="button" id="auto_address" value="自動入力"/>{$msgs.zipcode|default}<br/>
+	都道府県：		<select name="pref_code" id="pref"></select>{$msgs.pref_code|default}<br/>
+	市区町村：		<select name="city_code" id="city"></select>{$msgs.city_code|default}<br/>
+	町域：			<select name="town_code" id="town"></select>{$msgs.town_code|default}<br/>
+	番地・建物名：	<input type="text" name="address" value="{$address|default}" maxlength="" placeholder=""/>{$msgs.address|default}<br/><br/>
 	
-	電話番号：		<input type="text" name="tel" value="{$tel|default}" maxlength="30" placeholder="" />{$errors.tel|default}<br/>
-	メールアドレス：<input type="text" name="email" value="{$email|default}" maxlength="30" placeholder="" />{$errors.mail_address|default}<br/><br/>
+	電話番号：		<input type="text" name="tel" value="{$tel|default}" maxlength="30" placeholder="" />{$msgs.tel|default}<br/>
+	メールアドレス：<input type="text" name="email" value="{$email|default}" maxlength="30" placeholder="" />{$msgs.email|default}<br/><br/>
 	
 	ステータス：
-	{foreach from=Status::$name key=k item=v}
-		<input type="radio" name="status" value="{$k}" {if $k == ($status|default:Status::VALID)}checked="checked"{/if}>{$v}
+	{foreach from=St::$name key=k item=v}
+		<input type="radio" name="status" value="{$k}" {if $k == ($status|default:St::VALID)}checked="checked"{/if}>{$v}
 	{/foreach}<br/>
 
 	<hr/>
