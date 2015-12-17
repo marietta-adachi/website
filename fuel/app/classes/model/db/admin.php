@@ -20,7 +20,7 @@ class Model_Db_Admin extends Model_Db_Base
 
 	public static function login($email, $password, $remember)
 	{
-		$row = self::find_one_by(array('admin_email' => $email, 'admin_status' => Status::VALID,));
+		$row = self::find_one_by(array('admin_email' => $email, 'admin_status' => St::VALID,));
 		if (empty($row))
 		{
 			return false;

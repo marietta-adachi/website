@@ -140,7 +140,7 @@ return [
 			],
 		],
 		'page_limit' => [
-			'user' => 30,
+			'user' => 10,
 		],
 	],
 // </editor-fold>

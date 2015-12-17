@@ -3,22 +3,6 @@
 class Controller_Admin_User extends Controller_Base_Admin
 {
 
-	private $order = array(
-		'id' => ['user_id-asc', '順'],
-		'name' => ['user_name-asc', '順'],
-		'email' => ['user_email-asc', '順'],
-		'stamp' => ['user_updated_at-desc', '順'],
-	);
-
-	private function get_order($d)
-	{
-		$id = @$d['order'];
-		if (array_key_exists($id, $this->order))
-		{
-			return $this->order[$id][0];
-		}
-	}
-
 	private function get_criteria_form()
 	{
 		$form = Fieldset::instance();
@@ -29,30 +13,26 @@ class Controller_Admin_User extends Controller_Base_Admin
 		$form->add('freeword', 'フリーワード')->add_rule('max_length', 100);
 		$form->add('status');
 		$form->add('p');
-		$form->add('oeder');
+		$form->add('order');
+		$form->add('init');
 		return $form;
 	}
 
 	public function action_index()
 	{
-		$this->init_criteria(['status' => [St::VALID, St::INVALID], 'order' => 'id']);
-
-		$count = 0;
-		$list = [];
-		$page = null;
 		$d = $this->verify_criteria($this->get_criteria_form());
 		if ($d)
 		{
-			$d = $this->get_criteria($d);
+			$d = $this->get_criteria($d, ['status' => [St::VALID, St::INVALID], 'order' => 'id']);
 			$count = Model_Db_User::search_count($d);
 			$page = Page::get_page('admin/user', $d, $count, Config::get('admin.page_limit.user'));
-			$list = Model_Db_User::search($d, $this->get_order($d), $page->per_page, $page->offset);
+			$list = Model_Db_User::search($d, $page->per_page, $page->offset);
 			$page = $page->render();
 		}
 
-		$d['count'] = $count;
-		$d['list'] = $list;
-		$d['order_list'] = $this->order;
+		$d['count'] = $count? : 0;
+		$d['list'] = $list? : [];
+		$d['order_list'] = Model_Db_User::$order;
 
 		$this->template->content = View_Smarty::forge('admin/user/index', $d)->set_safe('pagination', $page);
 	}

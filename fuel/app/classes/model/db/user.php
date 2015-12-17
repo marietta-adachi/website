@@ -20,7 +20,7 @@ class Model_Db_User extends Model_Db_Base
 
 	public static function login($email, $password, $remember)
 	{
-		$row = self::find_one_by(array('user_email' => $email, 'user_status' => Status::VALID,));
+		$row = self::find_one_by(array('user_email' => $email, 'user_status' => St::VALID,));
 		if (empty($row))
 		{
 			return false;
@@ -96,10 +96,10 @@ class Model_Db_User extends Model_Db_Base
 
 	public static function search_count($c)
 	{
-		return self::search($c, null, null, null, true);
+		return self::search($c, null, null, true);
 	}
 
-	public static function search($c, $o, $limit, $offset, $count = false)
+	public static function search($c, $limit, $offset, $count = false)
 	{
 		/*
 		 * SELECT
@@ -130,26 +130,30 @@ class Model_Db_User extends Model_Db_Base
 			$sql.= ' and (false ';
 			$sql.= ' or u.user_name like :name ';
 			$p['name'] = '%' . $c['freeword'] . '%';
-			
+
 			$sql.= ' or u.user_email like :email ';
 			$p['email'] = '%' . $c['freeword'] . '%';
 			$sql.= ' ) ';
 		}
-		
+
 		/*
 		 * ORDER BY
 		 */
 		if (!$count)
 		{
-			$sub[] = 'user_id asc';
-			if (!empty($o))
+			$orders[] = 'user_id asc';
+			if (!empty($c['order']))
 			{
-				$tmp = explode('-', $o);
-				$nulls = ($tmp[2] == 'l') ? 'nulls last' : 'nulls first';
-				$sub[] = $tmp[0] . ' ' . $tmp[1] . ' ' . $nulls;
+				if (array_key_exists($d['order'], self::$order))
+				{
+					$tmp = self::$order[$d['order']][0];
+					$tmp = explode('-', $o);
+					$nulls = (@$tmp[2] == 'l') ? 'nulls last' : 'nulls first';
+					$orders[] = $tmp[0] . ' ' . $tmp[1] . ' ' . $nulls;
+				}
 			}
-			$sub = implode(',', $sub);
-			$sql .= ' order by ' . $sub . ' ';
+			$orders = implode(',', $orders);
+			$sql .= ' order by ' . $orders . ' ';
 		}
 
 		$res = self::exec($sql, $p, $limit, $offset);
@@ -162,6 +166,13 @@ class Model_Db_User extends Model_Db_Base
 			return $res;
 		}
 	}
+
+	public static $order = array(
+		'id' => ['user_id-asc', '順'],
+		'name' => ['user_name-asc', '順'],
+		'email' => ['user_email-asc', '順'],
+		'stamp' => ['user_updated_at-desc', '順'],
+	);
 
 	public function get_id()
 	{

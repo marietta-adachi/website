@@ -43,16 +43,16 @@
 					</ul>
 				</li>*}
 				<li {if preg_match("/^admin-user(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/user"><i class="fa fa-laptop"></i>会員管理</a>
+					<a href="admin/user?init=1"><i class="fa fa-laptop"></i>会員管理</a>
 				</li>
-				<li {if preg_match("/^admin-user(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/user"><i class="fa fa-laptop"></i>物件管理</a>
+				<li {if preg_match("/^admin-property(|-.*)$/",$screen)}class="current-page"{/if}>
+					<a href="admin/property?init=1"><i class="fa fa-laptop"></i>物件管理</a>
 				</li>
-				<li {if preg_match("/^admin-user(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/user"><i class="fa fa-laptop"></i>プラン管理</a>
+				<li {if preg_match("/^admin-plan(|-.*)$/",$screen)}class="current-page"{/if}>
+					<a href="admin/plan?init=1"><i class="fa fa-laptop"></i>プラン管理</a>
 				</li>
 				<li {if preg_match("/^admin-setting(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/setting"><i class="fa fa-laptop"></i>設定</a>
+					<a href="admin/settings"><i class="fa fa-laptop"></i>設定</a>
 				</li>
 			</ul>
 		</div>

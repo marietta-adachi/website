@@ -350,18 +350,7 @@ class Controller_Base_Base extends Controller_Template
 		$this->template->set_global('info', $msg);
 	}
 
-	protected function init_criteria($value = [])
-	{
-		$flg = Input::param('search');
-		if (empty($flg))
-		{
-			$bt = debug_backtrace();
-			Session::set($bt[1]['class'] . '/' . $bt[1]['function'], $value);
-			//Common::setCookie($key, $value);
-		}
-	}
-
-	protected function get_criteria($in)
+	protected function get_criteria($in, $initialize = [])
 	{
 		$bt = debug_backtrace();
 		$key = $bt[1]['class'] . '/' . $bt[1]['function'];
@@ -372,11 +361,17 @@ class Controller_Base_Base extends Controller_Template
 		$c = empty($c) ? [] : $c;
 		if (count($in) > 0)
 		{
+			// 初期表示の場合
+			if (!empty($in['init']))
+			{
+				$in = $initialize;
+			}
+
 			// 不要条件を取り除く
-			$disuse = array_diff_key($c, $in); // 外された条件を抽出
+			$disuse = array_diff_key($c, $in);
 			foreach ($disuse as $k => $v)
 			{
-				unset($c[$k]); // 外された分を削除
+				unset($c[$k]);
 			}
 		}
 		$c = array_merge($c, $in);

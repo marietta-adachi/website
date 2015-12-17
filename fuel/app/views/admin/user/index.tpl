@@ -1,9 +1,8 @@
 <form action="admin/user">
-	<input type="hidden" name="search" value="1" />
 	フリーワード：<input type="text" class="text" name="freeword" value="{$freeword|default}"/><br/>
 	ステータス：
 	{foreach from=St::$name key=k item=v}
-		<input type="checkbox" class="selection" name="status[]" value="{$k}" {if in_array($k, $status|default:[])}checked{/if}>{$v}
+		<input type="checkbox" class="selection" name="status[]" value="{$k}" {if in_array($k, $status|default:[])}checked="checked"{/if}>{$v}
 	{/foreach}<br/>
 	<!--button type="submit" class="btn btn-primary">検索</button-->
 </form>
