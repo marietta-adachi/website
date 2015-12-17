@@ -1,13 +1,12 @@
-<form id="ma_form" method="get" action="admin/user">
+<form action="admin/user">
 	<input type="hidden" name="search" value="1" />
-	フリーワード：<input type="text" name="freeword" value="{$freeword|default}" onkeydown="search();" /><br/>
+	フリーワード：<input type="text" class="text" name="freeword" value="{$freeword|default}"/><br/>
 	ステータス：
 	{foreach from=Status::$name key=k item=v}
-		<input type="checkbox" name="status[]" onchange="search_select()" value="{$k}" {if in_array($k, $status|default:[])}checked="checked"{/if}>{$v}
+		<input type="checkbox" class="selection" name="status[]" onchange="search_select()" value="{$k}" {if in_array($k, $status|default:[])}checked="checked"{/if}>{$v}
 	{/foreach}<br/>
-	<button type="submit" class="btn btn-primary">検索</button>
+	<!--button type="submit" class="btn btn-primary">検索</button-->
 </form>
-<a href='/'>sdfgsdfg</a>
 <div class="clearfix"></div>
 <button type="submit" class="btn btn-primary">新規登録</button>
 

@@ -8,9 +8,7 @@
 	多言語（langに）
 
 	JS
-		ファイルサイズチェック
 		ローディング
-		住所検索
 		ajax
 			http://blog.toshimaru.net/jquery-ajaxdeferredajax/
 

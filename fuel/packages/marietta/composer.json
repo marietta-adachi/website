@@ -1,0 +1,16 @@
+{
+	"name": "hinashiki/fuelphp-maintenance",
+	"description": "FuelPHP 1.x Maintenance Package",
+	"type": "fuel-package",
+	"homepage": "https://github.com/hinashiki/fuelphp-maintenance",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "hinashiki",
+			"email": "aono@slash-one.com"
+		}
+	],
+	"require": {
+		"composer/installers": "~1.0"
+	}
+}

@@ -17,7 +17,7 @@ class Controller_Base_Admin extends Controller_Base_Base
 		$this->post('admin', $this->template->content->tplname());
 
 		$this->template->set_global('menu', View_Smarty::forge("admin/parts/menu", []));
-		$this->template->set_global('top', View_Smarty::forge("admin/parts/top", []));
+		$this->template->set_global('top', View_Smarty::forge("admin/parts/top", ['user' => $this->get_user()]));
 		$this->template->set_global('header', View_Smarty::forge("admin/parts/header", []));
 		$this->template->set_global('footer', View_Smarty::forge("admin/parts/footer", []));
 

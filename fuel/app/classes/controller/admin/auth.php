@@ -49,7 +49,7 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 
 	public function action_logout()
 	{
-		$Model_Db_Admin::logout();
+		Model_Db_Admin::logout();
 		return Response::redirect('admin');
 	}
 
