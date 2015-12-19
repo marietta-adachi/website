@@ -7,14 +7,15 @@
 
 	<!-- menu prile quick info -->
 	<div class="profile">
-		<div class="profile_pic">
+		<!--div class="profile_pic">
 			<img src="assets/img/admin/user.jpg" alt="..." class="img-circle profile_img">
-		</div>
-		<div class="profile_info">
+		</div-->
+		<!--div class="profile_info"-->
 			<span>{$user.admin_last_login}</span>
 			<h2>{$user.admin_name}</h2>
-		</div>
+		<!--/div-->
 	</div>
+	<div class="clearfix"></div>
 	<!-- /menu prile quick info -->
 
 	<br />
@@ -22,7 +23,7 @@
 	<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 
 		<div class="menu_section">
-			<h3>General</h3>
+			<!--h3>General</h3-->
 			<ul class="nav side-menu">
 				{*<li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
 					<ul class="nav child_menu" style="display: none">
@@ -43,16 +44,10 @@
 					</ul>
 				</li>*}
 				<li {if preg_match("/^admin-user(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/user?init=1"><i class="fa fa-laptop"></i>会員管理</a>
-				</li>
-				<li {if preg_match("/^admin-property(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/property?init=1"><i class="fa fa-laptop"></i>物件管理</a>
+					<a href="admin/user?init=1"><i class="fa fa-laptop"></i>会員</a>
 				</li>
 				<li {if preg_match("/^admin-plan(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/plan?init=1"><i class="fa fa-laptop"></i>プラン管理</a>
-				</li>
-				<li {if preg_match("/^admin-setting(|-.*)$/",$screen)}class="current-page"{/if}>
-					<a href="admin/settings"><i class="fa fa-laptop"></i>設定</a>
+					<a href="admin/plan?init=1"><i class="fa fa-laptop"></i>プラン</a>
 				</li>
 			</ul>
 		</div>

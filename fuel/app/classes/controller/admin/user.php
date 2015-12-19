@@ -13,6 +13,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 		$form->add('freeword', 'フリーワード')->add_rule('max_length', 100);
 		$form->add('status');
 		$form->add('p');
+		$form->add('per_page');
 		$form->add('order');
 		$form->add('init');
 		return $form;
@@ -26,13 +27,14 @@ class Controller_Admin_User extends Controller_Base_Admin
 			$d = $this->get_criteria($d, ['status' => [St::VALID, St::INVALID], 'order' => 'id']);
 			$count = Model_Db_User::search_count($d);
 			$page = Page::get_page('admin/user', $d, $count, Config::get('site.admin.page_limit.user'));
-			$list = Model_Db_User::search($d, $page->per_page, $page->offset);
-			$page = $page->render();
+			$list = Model_Db_User::search($d, $page);
 		}
 
 		$d['count'] = $count? : 0;
 		$d['list'] = $list? : [];
 		$d['order_list'] = Model_Db_User::$order;
+		$d['offset'] = $page->offset;
+		$d['per_page'] = $page->per_page;
 
 		$this->template->content = View_Smarty::forge('admin/user/index', $d)->set_safe('pagination', $page);
 	}

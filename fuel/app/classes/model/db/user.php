@@ -95,10 +95,10 @@ class Model_Db_User extends Model_Db_Base
 
 	public static function search_count($c)
 	{
-		return self::search($c, null, null, true);
+		return self::search($c, null, true);
 	}
 
-	public static function search($c, $limit, $offset, $count = false)
+	public static function search($c, $page, $count = false)
 	{
 		/*
 		 * SELECT
@@ -147,7 +147,7 @@ class Model_Db_User extends Model_Db_Base
 				{
 					$tmp = self::$order[$c['order']][0];
 					$tmp = explode('-', $tmp);
-					//$nulls = (@$tmp[2] == 'l') ? 'nulls last' : 'nulls first';
+					$nulls = (@$tmp[2] == 'l') ? 'nulls last' : 'nulls first';
 					$orders[] = $tmp[0] . ' ' . $tmp[1] . ' ';// . $nulls;
 				}
 			}
@@ -155,13 +155,15 @@ class Model_Db_User extends Model_Db_Base
 			$sql .= ' order by ' . $orders . ' ';
 		}
 
-		$res = self::exec($sql, $p, $limit, $offset);
+		
 		if ($count)
 		{
+			$res = self::exec($sql, $p);
 			return $res[0]['count'];
 		}
 		else
 		{
+			$res = self::exec($sql, $p, $page->per_page, $page->offset);
 			return $res;
 		}
 	}
