@@ -6,61 +6,43 @@ class Controller_Base_Tpl extends Controller_Template
 	protected $_custom_title = '';
 	protected $_custom_keyword = [[], 0];
 	protected $_custom_description = '';
-	protected $_breadcrumb = [];
+	protected $_breadcrumbs = [];
 	protected $_h1 = '';
 	protected $_messages = [];
+
 
 	public function router($method, $params)
 	{
 		Config::load('base');
 
-		$action = strtolower(str_replace('Controller_', '', $this->request->controller . '_' . $this->request->action));
-		$this->debug_param($action);
+		//$action = $this->request->controller . '_' . $this->request->action;
+		$action = $this->request->route->translation ;
+		Logger::params($action,Input::all(),$this->params());
 
-		$layer = 'admin';
-		$layer2 = empty($layer) ? '' : '.' . $layer;
-
-		$tmp = Config::get('site' . $layer2 . '.ssl');
-		if (Input::protocol() == 'http')
+		// ssl
+		$cfg = empty($this->subsystem) ? 'site' : 'site.' . $this->subsystem;
+		list($need, $action_list, $both_list) = $this->get_onoff(Config::get($cfg . '.ssl'));
+		$redirect = false;
+		if (empty($both_list) || !in_array($action, $both_list))
 		{
-			$ssl = false;
-			if (array_key_exists('on', $tmp))
-			{
-				$ssl = in_array($action, $tmp['on']);
-			}
-			else
-			{
-				$ssl = !in_array($action, $tmp['off']);
-			}
+			$ssl = Input::protocol() == 'http';
 			if ($ssl)
 			{
-				$url = Uri::create(Input::uri(), [], [], true);
-				Log::info('HTTPS Redirect : ' . $url);
-				return Response::redirect($url);
-			}
-		}
-		else if (Input::protocol() == 'https')
-		{
-			$http = false;
-			if (array_key_exists('on', $tmp))
-			{
-				$http = !in_array($action, $tmp['on']);
+				$redirect = $need ? in_array($action, $action_list) : !in_array($action, $action_list);
 			}
 			else
 			{
-				$http = in_array($action, $tmp['off']);
+				$redirect = $need ? !in_array($action, $action_list) : in_array($action, $action_list);
 			}
-			if ($http)
-			{
-				$url = Uri::create(Input::uri(), [], [], false);
-				Log::info('HTTP Redirect : ' . $url);
-				return Response::redirect($url);
-			}
+		}
+		if ($redirect)
+		{
+			return Response::redirect(Uri::create(Input::uri(), [], [], $ssl));
 		}
 
 		// authentication
 		$flg = false;
-		list($need, $action_list, $both_list) = $this->get_onoff(Config::get('site' . $layer2 . '.auth'));
+		list($need, $action_list, $both_list) = $this->get_onoff(Config::get($cfg . '.auth'));
 		if (empty($both_list) || !in_array($action, $both_list))
 		{
 			if ($this->is_login())
@@ -74,9 +56,10 @@ class Controller_Base_Tpl extends Controller_Template
 		}
 		if ($flg)
 		{
-			return Response::redirect($layer . '/auth');
+			return Response::redirect($this->subsystem . '/auth');
 		}
 
+		// call controller
 		$call = 'action_' . $this->request->action;
 		if (is_callable([$this, $call]))
 		{
@@ -106,12 +89,13 @@ class Controller_Base_Tpl extends Controller_Template
 		}
 	}
 
-	public function post($tplname, $layer = '')
+	protected function post($tplname, $layer = '')
 	{
 		// screen
 		Log::info($tplname);
 		$tmp[] = 'site';
-		if (!empty($layer)) $tmp[] = $layer;
+		if (!empty($layer))
+			$tmp[] = $layer;
 		$tmp[] = 'meta';
 		$meta = Config::get(implode('.', $tmp));
 
@@ -121,7 +105,7 @@ class Controller_Base_Tpl extends Controller_Template
 		$this->set_title($meta, $tplname);
 		$this->set_keywords($meta, $tplname);
 		$this->set_description($meta, $tplname);
-		$this->set_breadcrumb(@$meta['screens'][$tplname][0]);
+		$this->set_breadcrumbs(@$meta['screens'][$tplname][0]);
 		$this->template->set_safe('h1', $this->_h1);
 
 		$this->template->set_global('screen', str_replace('/', '-', $tplname));
@@ -139,7 +123,7 @@ class Controller_Base_Tpl extends Controller_Template
 		$this->template->set_global('user', $this->get_user());
 	}
 
-	public function set_title($meta, $tplname)
+	protected function set_title($meta, $tplname)
 	{
 		if (!array_key_exists($tplname, $meta['screens']))
 		{
@@ -154,7 +138,7 @@ class Controller_Base_Tpl extends Controller_Template
 		$this->template->set_global('title', $tmp);
 	}
 
-	public function set_keywords($meta, $tplname)
+	protected function set_keywords($meta, $tplname)
 	{
 		if (!array_key_exists($tplname, $meta['screens']))
 		{
@@ -184,7 +168,7 @@ class Controller_Base_Tpl extends Controller_Template
 		$this->template->set_global('keywords', $tmp);
 	}
 
-	public function set_description($meta, $tplname)
+	protected function set_description($meta, $tplname)
 	{
 		if (!array_key_exists($tplname, $meta['screens']))
 		{
@@ -195,21 +179,21 @@ class Controller_Base_Tpl extends Controller_Template
 		$this->template->set_global('description', $tmp);
 	}
 
-	protected function set_breadcrumb($title)
+	protected function set_breadcrumbs($title)
 	{
 		/*
 		  sample
-		  $list = array(
-		  array(array('B', Uri::create('admin/property')),array('B', Uri::create('admin/property')),),
-		  array('B', Uri::create('admin/property')),
+		  $this->_breadcrumbs = [
+		  [['B', Uri::create('admin/property')],['B', Uri::create('admin/property')],],
+		  ['B', Uri::create('admin/property')],
 		  'C',
-		  );
+		  ];
 		 */
 
 		$list = [];
 		$position = 1;
 		$add_title = true;
-		foreach ($this->_breadcrumb as $item)
+		foreach ($this->_breadcrumbs as $item)
 		{
 			if (is_array($item))
 			{
@@ -254,11 +238,11 @@ class Controller_Base_Tpl extends Controller_Template
 					. '<meta itemprop="position" content="' . $position . '" />';
 		}
 
-		$html = '<ol id="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">'
+		$html = '<ul id="breadcrumbs-three" itemscope itemtype="http://schema.org/BreadcrumbList">'
 				. '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">'
 				. implode('</li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">', $list)
 				. '</li>'
-				. '</ol>';
+				. '</ul>';
 
 		$this->template->set_safe('breadcrumb', $html);
 	}
@@ -448,30 +432,7 @@ class Controller_Base_Tpl extends Controller_Template
 		return Upload::get_files();
 	}
 
-	protected function debug_param($action)
-	{
-		Log::info('ACTION：' . $action);
-		foreach (Input::all() as $k => $v)
-		{
-			if (is_array($v))
-			{
-				foreach ($v as $k2 => $v2)
-				{
-					Log::info($k . '：' . $v2);
-				}
-			}
-			else
-			{
-				Log::info($k . '：' . $v);
-			}
-		}
-
-		// routes.phpの名前付きパラメータ確認
-		foreach ($this->params() as $k => $v)
-		{
-			Log::info($k . '：' . $v);
-		}
-	}
+	
 
 	/* public function special()
 	  {

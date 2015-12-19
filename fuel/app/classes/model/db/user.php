@@ -93,12 +93,12 @@ class Model_Db_User extends Model_Db_Base
 		return count($list) == 0;
 	}
 
-	public static function search_count($c)
+	public static function count_by($c)
 	{
-		return self::search($c, null, true);
+		return self::by($c, null, true);
 	}
 
-	public static function search($c, $page, $count = false)
+	public static function by($c, $page, $count = false)
 	{
 		/*
 		 * SELECT

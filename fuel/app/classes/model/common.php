@@ -73,6 +73,31 @@ class System
 class Logger
 {
 
+	public static function params($action, $all, $params)
+	{
+		Log::info('ACTION : ' . $action);
+		foreach ($all as $k => $v)
+		{
+			if (is_array($v))
+			{
+				foreach ($v as $k2 => $v2)
+				{
+					Log::info($k . ' : ' . $v2);
+				}
+			}
+			else
+			{
+				Log::info($k . ' : ' . $v);
+			}
+		}
+
+		// routes.phpの名前付きパラメータ確認
+		foreach ($params as $k => $v)
+		{
+			Log::info($k . ' : ' . $v);
+		}
+	}
+
 	public static function error($e)
 	{
 		Log::error('* ▼ **********************************************************************');

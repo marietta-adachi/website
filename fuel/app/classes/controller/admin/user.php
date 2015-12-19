@@ -25,9 +25,9 @@ class Controller_Admin_User extends Controller_Base_Admin
 		if ($d)
 		{
 			$d = $this->get_criteria($d, ['status' => [St::VALID, St::INVALID], 'order' => 'id']);
-			$count = Model_Db_User::search_count($d);
+			$count = Model_Db_User::count_by($d);
 			$page = Page::get_page('admin/user', $d, $count, Config::get('site.admin.page_limit.user'));
-			$list = Model_Db_User::search($d, $page);
+			$list = Model_Db_User::by($d, $page);
 		}
 
 		$d['count'] = $count? : 0;
@@ -74,8 +74,12 @@ class Controller_Admin_User extends Controller_Base_Admin
 			}
 		}
 
-		//$d['js_params'] = json_encode([]);
-
+		$d['js_params'] = json_encode(["b" => "bbbb", "a" => "aaaa"]);
+		$this->_breadcrumbs = [
+			[['B', Uri::create('admin/property')], ['B', Uri::create('admin/property')],],
+			['B', Uri::create('admin/property')],
+			'C',
+		];
 		$this->template->content = View_Smarty::forge('admin/user/edit', $d);
 	}
 

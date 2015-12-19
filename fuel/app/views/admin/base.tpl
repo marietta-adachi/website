@@ -43,7 +43,7 @@
 		{Asset::css('admin/base.css')}
 
 		{* JS *********************************************************************************}
-		<script id="{$screen}-js" data-params="{$page_params|default}">
+		<script id="{$screen}-js" data-params="{$js_params|default}">
 			var pageParams;
 			$(function () {
 				pageParams = $('#{$screen}-js').data('params');

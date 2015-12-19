@@ -4,6 +4,7 @@ class Controller_Base_Admin extends Controller_Base_Tpl
 {
 
 	public $template = 'admin/base';
+	protected $subsystem = 'admin';
 
 	public function after($response)
 	{

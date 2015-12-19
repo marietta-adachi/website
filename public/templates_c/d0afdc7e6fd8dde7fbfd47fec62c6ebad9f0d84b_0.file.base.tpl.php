@@ -1,17 +1,17 @@
 <?php
-/* Smarty version 3.1.28-dev/77, created on 2015-12-16 16:23:46
+/* Smarty version 3.1.28-dev/77, created on 2015-12-19 22:28:24
   from "D:\workspace\website\fuel\app\views\admin\base.tpl" */
 
 if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl, array (
   'has_nocache_code' => false,
   'version' => '3.1.28-dev/77',
-  'unifunc' => 'content_5671118235d007_84529720',
+  'unifunc' => 'content_56755b78914a38_40690801',
   'file_dependency' => 
   array (
     'd0afdc7e6fd8dde7fbfd47fec62c6ebad9f0d84b' => 
     array (
       0 => 'D:\\workspace\\website\\fuel\\app\\views\\admin\\base.tpl',
-      1 => 1450250621,
+      1 => 1450531664,
       2 => 'file',
     ),
   ),
@@ -19,7 +19,7 @@ if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl,
   array (
   ),
 ),false)) {
-function content_5671118235d007_84529720 ($_smarty_tpl) {
+function content_56755b78914a38_40690801 ($_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -89,7 +89,7 @@ function content_5671118235d007_84529720 ($_smarty_tpl) {
 		
 		<?php echo '<script'; ?>
  id="<?php echo $_smarty_tpl->tpl_vars['screen']->value;?>
--js" data-params="<?php echo (($tmp = @$_smarty_tpl->tpl_vars['page_params']->value)===null||$tmp==='' ? '' : $tmp);?>
+-js" data-params="<?php echo (($tmp = @$_smarty_tpl->tpl_vars['js_params']->value)===null||$tmp==='' ? '' : $tmp);?>
 ">
 			var pageParams;
 			$(function () {

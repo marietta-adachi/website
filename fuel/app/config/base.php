@@ -69,11 +69,11 @@ return [
 				'500' => ['500', [null, []], '',],
 				'index' => ['トップ', [null, []], '',],
 				'about' => ['○○について', [null, []], '',],
-				'user/index' => ['ユーザ一覧', [null, []], '',],
-				'user_detail' => ['ユーザ詳細', [null, []], '',],
-				'contact_edit' => ['お問い合わせ', [null, []], '',],
-				'contact_confirm' => ['お問い合わせ内容確認', [null, []], '',],
-				'contact_do' => ['お問い合わせ送信完了', [null, []], '',],
+				'user' => ['ユーザ一覧', [null, []], '',],
+				'user/detail' => ['ユーザ詳細', [null, []], '',],
+				'contact/edit' => ['お問い合わせ', [null, []], '',],
+				'contact/confirm' => ['お問い合わせ内容確認', [null, []], '',],
+				'contact/do' => ['お問い合わせ送信完了', [null, []], '',],
 			],
 			'display' => false,
 		],
@@ -85,9 +85,9 @@ return [
 		],
 		'ssl' => [
 			'on' => [// or off
-				'contact_index',
-				'contact_confirm',
-				'contact_do',
+				'contact',
+				'contact/confirm',
+				'contact/do',
 			],
 		],
 		'page_limit' => [
@@ -126,8 +126,8 @@ return [
 			],
 			'auth' => [
 				'off' => [
-					'admin_auth_index',
-					'admin_auth_login',
+					'admin/auth',
+					'admin/auth/login',
 				],
 				'both' => [
 				],

@@ -7,6 +7,12 @@ class Ope
 	const MODIFY = 2;
 	const DELETE = 3;
 
+	public static $name = array(
+		self::ADD => '登録',
+		self::MODIFY => '変更',
+		self::DELETE => '削除',
+	);
+
 }
 
 class St
@@ -16,8 +22,8 @@ class St
 	const INVALID = 9;
 
 	public static $name = array(
-		self::VALID => "有効",
-		self::INVALID => "無効",
+		self::VALID => '有効',
+		self::INVALID => '無効',
 	);
 
 }
@@ -29,8 +35,8 @@ class UserStatus
 	const INVALID = 9;
 
 	public static $name = array(
-		self::VALID => "有効",
-		self::INVALID => "無効",
+		self::VALID => '有効',
+		self::INVALID => '無効',
 	);
 
 }
@@ -42,8 +48,8 @@ class SettingType
 	const MAILADDRESS = 2;
 
 	public static $name = array(
-		self::PASSWORD => "パスワード",
-		self::MAILADDRESS => "メールアドレス",
+		self::PASSWORD => 'パスワード',
+		self::MAILADDRESS => 'メールアドレス',
 	);
 
 }
@@ -51,16 +57,16 @@ class SettingType
 class RestResult
 {
 
-	const SUCCESS = "SUCCESS";
-	const FAILED = "FAILED";
-	const UNAUTHORIZED = "UNAUTHORIZED";
+	const SUCCESS = 'SUCCESS';
+	const FAILED = 'FAILED';
+	const UNAUTHORIZED = 'UNAUTHORIZED';
 
 }
 
 class Deli
 {
 
-	const NAME = "　";
-	const PLAN = "-";
+	const NAME = '　';
+	const PLAN = '-';
 
 }
