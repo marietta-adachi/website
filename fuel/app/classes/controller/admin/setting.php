@@ -93,7 +93,7 @@ class Controller_Admin_Setting extends Controller_Baseadmin
 					break;
 				default:
 			}
-			$admin->m_admin_updated_at = Common::now();
+			$admin->m_admin_updated_at = System::now();
 
 			if ($admin->save() == 0)
 			{

@@ -11,7 +11,7 @@ class Controller_Admin_Api_Common extends Controller_Base_Api
 			$id = Input::post("id");
 			$image = Input::post("image");
 
-			$fileName = $id . "_" . Common::nowTimestamp() . ".png";
+			$fileName = $id . "_" . System::ymdhism() . ".png";
 
 			$res = File::create(APPPATH . "../../report/tmp/", $fileName, base64_decode(str_replace(' ', '+', $image)));
 			if (!$res)

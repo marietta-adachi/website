@@ -64,7 +64,7 @@ class Model_Task_Datamigration extends Model
 	    {
 		DB::rollback_transaction();
 	    }
-	    Common::error($e);
+	    Logger::error($e);
 	    throw $e;
 	}
     }

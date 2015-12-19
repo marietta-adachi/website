@@ -33,7 +33,7 @@ class Model_Db_Admin extends Model_Db_Base
 			return false;
 		}
 
-		$row->admin_last_login = Common::now();
+		$row->admin_last_login = System::now();
 		$row->save();
 
 		Session::create();

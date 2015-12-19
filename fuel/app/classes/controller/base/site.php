@@ -1,20 +1,14 @@
 <?php
 
-class Controller_Base_Site extends Controller_Base_Base
+class Controller_Base_Site extends Controller_Base_Tpl
 {
 
 	public $template = 'base';
 
-	public function before()
-	{
-		parent::before();
-		$this->pre('site');
-	}
-
 	public function after($response)
 	{
 		$response = parent::after($response);
-		$this->post('site', $this->template->content->tplname());
+		$this->post($this->template->content->tplname());
 		return $response;
 	}
 

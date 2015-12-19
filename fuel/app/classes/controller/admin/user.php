@@ -25,7 +25,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 		{
 			$d = $this->get_criteria($d, ['status' => [St::VALID, St::INVALID], 'order' => 'id']);
 			$count = Model_Db_User::search_count($d);
-			$page = Page::get_page('admin/user', $d, $count, Config::get('admin.page_limit.user'));
+			$page = Page::get_page('admin/user', $d, $count, Config::get('site.admin.page_limit.user'));
 			$list = Model_Db_User::search($d, $page->per_page, $page->offset);
 			$page = $page->render();
 		}
@@ -119,7 +119,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 			return;
 		}
 
-		$now = Common::now();
+		$now = System::now();
 		$user = null;
 		if ($d['ope'] == Ope::ADD)
 		{

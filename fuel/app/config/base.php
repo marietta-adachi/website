@@ -103,44 +103,42 @@ return [
 				5000 => '5km圏内',
 			],
 		],
-	],
-// </editor-fold>
-// <editor-fold defaultstate='collapsed' desc='admin'>
-	'admin' => [
-		'meta' => [
-			'title' => '管理｜WEBSITE',
-			'keywords' => [],
-			'description' => '管理｜WEBSITE',
-			/*
-			 * key：テンプレート名
-			 * title：$commonTitleの前に付与
-			 * keywords：$commonKeywordsの任意の場所に挿入
-			 * description：$commonDescriptionの前に付与
-			 */
-			'screens' => [
-				'admin/index' => ['トップ', [null, []], '',],
-				'admin/auth' => ['ログイン', [null, []], '',],
-				'admin/user/index' => ['会員管理', [null, []], '',],
-				'admin/user/edit' => ['会員管理 - 入力', [null, []], '',],
-				'admin/user/confirm' => ['会員管理 - 入力内容確認', [null, []], '',],
-				'admin/user/do' => ['会員管理 - 更新完了', [null, []], '',],
-				'admin/setting' => ['設定', [null, []], '',],
+		'admin' => [
+			'meta' => [
+				'title' => '管理｜WEBSITE',
+				'keywords' => [],
+				'description' => '管理｜WEBSITE',
+				/*
+				 * key：テンプレート名
+				 * title：$commonTitleの前に付与
+				 * keywords：$commonKeywordsの任意の場所に挿入
+				 * description：$commonDescriptionの前に付与
+				 */
+				'screens' => [
+					'admin/index' => ['トップ', [null, []], '',],
+					'admin/auth' => ['ログイン', [null, []], '',],
+					'admin/user/index' => ['会員管理', [null, []], '',],
+					'admin/user/edit' => ['会員管理 - 入力', [null, []], '',],
+					'admin/user/confirm' => ['会員管理 - 入力内容確認', [null, []], '',],
+					'admin/user/do' => ['会員管理 - 更新完了', [null, []], '',],
+					'admin/setting' => ['設定', [null, []], '',],
+				],
 			],
-		],
-		'auth' => [
-			'off' => [
-				'admin_auth_index',
-				'admin_auth_login',
+			'auth' => [
+				'off' => [
+					'admin_auth_index',
+					'admin_auth_login',
+				],
+				'both' => [
+				],
 			],
-			'both' => [
+			'ssl' => [
+				'on' => [
+				],
 			],
-		],
-		'ssl' => [
-			'on' => [
+			'page_limit' => [
+				'user' => 10,
 			],
-		],
-		'page_limit' => [
-			'user' => 10,
 		],
 	],
 // </editor-fold>

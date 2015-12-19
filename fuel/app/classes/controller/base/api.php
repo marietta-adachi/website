@@ -18,7 +18,7 @@ class Controller_Base_Api extends Controller_Rest
 	{
 		if (!Security::check_token($token))
 		{
-			Common::error(new Exception('CSRF Error'));
+			Logger::error(new Exception('CSRF Error'));
 			//	Controller_Auth::logout();
 			return Response::redirect();
 		}
@@ -46,7 +46,7 @@ class Controller_Base_Api extends Controller_Rest
 
 	protected function error($e)
 	{
-		Common::error($e);
+		Logger::error($e);
 		$this->response(array('message' => $e->getMessage(),), 500);
 	}
 

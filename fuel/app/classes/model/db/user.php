@@ -31,7 +31,7 @@ class Model_Db_User extends Model_Db_Base
 			return false;
 		}
 
-		$row->user_last_login = Common::now();
+		$row->user_last_login = System::now();
 		$row->save();
 
 		Session::create();
@@ -49,7 +49,7 @@ class Model_Db_User extends Model_Db_Base
 
 	public static function by_session()
 	{
-		return Session::get(self::$_table_nam);
+		return Session::get(self::$_table_name);
 	}
 
 	public static function by_id($id)
@@ -60,14 +60,14 @@ class Model_Db_User extends Model_Db_Base
 	public static function anew()
 	{
 		$row = parent::forge();
-		$row->user_created_at = Common::now(); // TODO
+		$row->user_created_at = System::now(); // TODO
 		return $row;
 	}
 
 	public function del_logical()
 	{
 		$row = parent::forge();
-		$row->user_deleted_at = Common::now(); // TODO
+		$row->user_deleted_at = System::now(); // TODO
 		if ($row->save() == 1)
 		{
 			return true;
@@ -143,12 +143,12 @@ class Model_Db_User extends Model_Db_Base
 			$orders[] = 'user_id asc';
 			if (!empty($c['order']))
 			{
-				if (array_key_exists($d['order'], self::$order))
+				if (array_key_exists($c['order'], self::$order))
 				{
-					$tmp = self::$order[$d['order']][0];
-					$tmp = explode('-', $o);
-					$nulls = (@$tmp[2] == 'l') ? 'nulls last' : 'nulls first';
-					$orders[] = $tmp[0] . ' ' . $tmp[1] . ' ' . $nulls;
+					$tmp = self::$order[$c['order']][0];
+					$tmp = explode('-', $tmp);
+					//$nulls = (@$tmp[2] == 'l') ? 'nulls last' : 'nulls first';
+					$orders[] = $tmp[0] . ' ' . $tmp[1] . ' ';// . $nulls;
 				}
 			}
 			$orders = implode(',', $orders);

@@ -45,7 +45,7 @@ class Model_Task_Registdummy extends Model
 			catch (Exception $e)
 			{
 				DB::rollback_transaction();
-				Common::error($e);
+				Logger::error($e);
 				throw $e;
 			}
 		}
@@ -85,7 +85,7 @@ class Model_Task_Registdummy extends Model
 			catch (Exception $e)
 			{
 				DB::rollback_transaction();
-				Common::error($e);
+				Logger::error($e);
 				throw $e;
 			}
 		}
@@ -105,7 +105,7 @@ class Model_Task_Registdummy extends Model
 		catch (Exception $e)
 		{
 			DB::rollback_transaction();
-			Common::error($e);
+			Logger::error($e);
 			throw $e;
 		}
 	}
@@ -143,7 +143,7 @@ class Model_Task_Registdummy extends Model
 		$row->m_hospital_director_hospital_id = $hospitalId;
 		$row->m_hospital_director_name = "院長　太郎";
 		$row->m_hospital_director_biography = null;
-		$row->m_hospital_director_created_at = Common::now();
+		$row->m_hospital_director_created_at = System::now();
 		$row->m_hospital_director_updated_at = null;
 		$row->m_hospital_director_deleted_at = null;
 		$row->save();
@@ -248,7 +248,7 @@ class Model_Task_Registdummy extends Model
 		$row->m_hospital_timetable_night = (rand(0,1) == 0);
 		
 		$row->m_hospital_timetable_memo = null;
-		$row->m_hospital_timetable_created_at = Common::now();
+		$row->m_hospital_timetable_created_at = System::now();
 		$row->m_hospital_timetable_updated_at = null;
 		$row->m_hospital_timetable_deleted_at = null;
 
@@ -295,7 +295,7 @@ class Model_Task_Registdummy extends Model
 			}
 
 			$row->m_hospital_access_display_order = 999;
-			$row->m_hospital_access_created_at = Common::now();
+			$row->m_hospital_access_created_at = System::now();
 
 			$row->save();
 		}
@@ -351,7 +351,7 @@ class Model_Task_Registdummy extends Model
 			$row->t_hospital_review_hospital_id = $hospitalId;
 			$row->t_hospital_review_message = $this->dummyReview[rand(0, 11)];
 			$row->t_hospital_review_status = ReviewStatus::PUBLISH;
-			$row->t_hospital_review_created_at = Common::now();
+			$row->t_hospital_review_created_at = System::now();
 			$row->t_hospital_review_updated_at = null;
 			$row->t_hospital_review_deleted_at = null;
 			$row->save();
@@ -374,7 +374,7 @@ class Model_Task_Registdummy extends Model
 			$row->t_hospital_evaluate_wait = rand(0, 5);
 			$row->t_hospital_evaluate_total = rand(0, 5);
 			$row->t_hospital_evaluate_status = EvaluateStatus::VALID;
-			$row->t_hospital_evaluate_created_at = Common::now();
+			$row->t_hospital_evaluate_created_at = System::now();
 			$row->t_hospital_evaluate_updated_at = null;
 			$row->t_hospital_evaluate_deleted_at = null;
 			$row->save();

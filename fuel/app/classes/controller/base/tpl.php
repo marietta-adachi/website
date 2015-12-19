@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Base_Base extends Controller_Template
+class Controller_Base_Tpl extends Controller_Template
 {
 
 	protected $_custom_title = '';
@@ -10,15 +10,17 @@ class Controller_Base_Base extends Controller_Template
 	protected $_h1 = '';
 	protected $_messages = [];
 
-	public function pre($type)
+	public function router($method, $params)
 	{
 		Config::load('base');
 
 		$action = strtolower(str_replace('Controller_', '', $this->request->controller . '_' . $this->request->action));
 		$this->debug_param($action);
 
+		$layer = 'admin';
+		$layer2 = empty($layer) ? '' : '.' . $layer;
 
-		$tmp = Config::get($type . '.ssl');
+		$tmp = Config::get('site' . $layer2 . '.ssl');
 		if (Input::protocol() == 'http')
 		{
 			$ssl = false;
@@ -58,7 +60,7 @@ class Controller_Base_Base extends Controller_Template
 
 		// authentication
 		$flg = false;
-		list($need, $action_list, $both_list) = $this->get_onoff(Config::get($type . '.auth'));
+		list($need, $action_list, $both_list) = $this->get_onoff(Config::get('site' . $layer2 . '.auth'));
 		if (empty($both_list) || !in_array($action, $both_list))
 		{
 			if ($this->is_login())
@@ -72,7 +74,13 @@ class Controller_Base_Base extends Controller_Template
 		}
 		if ($flg)
 		{
-			return Response::redirect((($type == 'site') ? '' : $type) . '/auth');
+			return Response::redirect($layer . '/auth');
+		}
+
+		$call = 'action_' . $this->request->action;
+		if (is_callable([$this, $call]))
+		{
+			$this->$call($params);
 		}
 	}
 
@@ -98,11 +106,14 @@ class Controller_Base_Base extends Controller_Template
 		}
 	}
 
-	public function post($type, $tplname)
+	public function post($tplname, $layer = '')
 	{
 		// screen
 		Log::info($tplname);
-		$meta = Config::get($type . '.meta');
+		$tmp[] = 'site';
+		if (!empty($layer)) $tmp[] = $layer;
+		$tmp[] = 'meta';
+		$meta = Config::get(implode('.', $tmp));
 
 		$this->set_assets($tplname);
 
@@ -121,7 +132,7 @@ class Controller_Base_Base extends Controller_Template
 		$this->template->set_global('msgs', $this->_messages);
 
 		// device
-		$this->template->set_global('device', Common::get_device());
+		$this->template->set_global('device', System::get_device());
 
 		// login
 		$this->template->set_global('login', $this->is_login());
@@ -294,7 +305,7 @@ class Controller_Base_Base extends Controller_Template
 	{
 		if (!Security::check_token())
 		{
-			Common::error(new Exception('CSRF Error'));
+			Logger::error(new Exception('CSRF Error'));
 			Response::redirect('/');
 		}
 	}
@@ -355,9 +366,7 @@ class Controller_Base_Base extends Controller_Template
 		$bt = debug_backtrace();
 		$key = $bt[1]['class'] . '/' . $bt[1]['function'];
 
-		$c = Session::get($key);
-		//$c = Common::getCookie($key);
-
+		$c = Util::get_cookie($key);
 		$c = empty($c) ? [] : $c;
 		if (count($in) > 0)
 		{
@@ -375,9 +384,7 @@ class Controller_Base_Base extends Controller_Template
 			}
 		}
 		$c = array_merge($c, $in);
-
-		Session::set($key, $c);
-		//Common::setCookie($key, $c);
+		Util::set_cookie($key, $c);
 
 		return $c;
 	}
@@ -399,6 +406,70 @@ class Controller_Base_Base extends Controller_Template
 		{
 			DB::rollback_transaction();
 			throw new \HttpServerErrorException();
+		}
+	}
+
+	protected function get_upload_file($config)
+	{
+		try
+		{
+			Upload::process($config);
+		}
+		catch (Exception $e)
+		{
+			return null; // 未ログイン = アップロードなし = なにもしない
+		}
+
+		if (!Upload::is_valid())
+		{
+			$files = Upload::get_errors();
+			foreach ($files as $f)
+			{
+				foreach ($f['errors'] as $e)
+				{
+					if ($e['error'] == 4)
+					{
+						// no upload
+						continue;
+					}
+					else
+					{
+						$this->set_error([$f['field'] => 'ファイル形式が不正です'], true);
+					}
+				}
+			}
+
+			if ($this->has_error())
+			{
+				return false;
+			}
+		}
+
+		return Upload::get_files();
+	}
+
+	protected function debug_param($action)
+	{
+		Log::info('ACTION：' . $action);
+		foreach (Input::all() as $k => $v)
+		{
+			if (is_array($v))
+			{
+				foreach ($v as $k2 => $v2)
+				{
+					Log::info($k . '：' . $v2);
+				}
+			}
+			else
+			{
+				Log::info($k . '：' . $v);
+			}
+		}
+
+		// routes.phpの名前付きパラメータ確認
+		foreach ($this->params() as $k => $v)
+		{
+			Log::info($k . '：' . $v);
 		}
 	}
 
@@ -440,66 +511,4 @@ class Controller_Base_Base extends Controller_Template
 
 	  $this->template->content = $view;
 	  } */
-
-	protected function get_upload_file($config)
-	{
-		try
-		{
-			Upload::process($config);
-		}
-		catch (Exception $e)
-		{
-			return null; // 未ログイン = アップロードなし = なにもしない
-		}
-
-		if (!Upload::is_valid())
-		{
-			$files = Upload::get_errors();
-			foreach ($files as $f)
-			{
-				foreach ($f['errors'] as $e)
-				{
-					if ($e['error'] == 4)
-					{
-						// no upload
-						continue;
-					}
-					else
-					{
-						$this->set_error([$f['field'] => 'ファイル形式が不正です'], true);
-					}
-				}
-			}
-
-			$this->checkError();
-		}
-
-		return Upload::get_files();
-	}
-
-	protected function debug_param($action)
-	{
-		Log::info('ACTION：' . $action);
-		foreach (Input::all() as $k => $v)
-		{
-			if (is_array($v))
-			{
-				foreach ($v as $k2 => $v2)
-				{
-					Log::info($k . '：' . $v2);
-				}
-			}
-			else
-			{
-				Log::info($k . '：' . $v);
-			}
-		}
-
-		// routes.phpの名前付きパラメータ確認
-		foreach ($this->params() as $k => $v)
-		{
-			Log::info($k . '：' . $v);
-		}
-	}
-
 }

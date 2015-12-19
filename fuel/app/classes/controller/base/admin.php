@@ -1,20 +1,14 @@
 <?php
 
-class Controller_Base_Admin extends Controller_Base_Base
+class Controller_Base_Admin extends Controller_Base_Tpl
 {
 
 	public $template = 'admin/base';
 
-	public function before()
-	{
-		parent::before();
-		$this->pre('admin');
-	}
-
 	public function after($response)
 	{
-		$response = parent::after($response, 'admin');
-		$this->post('admin', $this->template->content->tplname());
+		$response = parent::after($response);
+		$this->post($this->template->content->tplname(), 'admin');
 
 		$this->template->set_global('menu', View_Smarty::forge("admin/parts/menu", []));
 		$this->template->set_global('top', View_Smarty::forge("admin/parts/top", ['user' => $this->get_user()]));

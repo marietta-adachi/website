@@ -1,36 +1,140 @@
 <?php
 
-class Common
+class System
 {
 
-	public static function setCookie($k, $v)
+	public static function today()
 	{
-		$tmp = json_encode($v);
-		$tmp = base64_encode($tmp); // ダブルクオーテーションがエスケープされるため
-		Cookie::set($k, $tmp);
+		$base_date = Config::get('base_date');
+		if (!empty($base_date))
+		{
+			return $base_date;
+		}
+		else
+		{
+			return date('Y-m-d');
+		}
 	}
 
-	public static function getCookie($k)
+	public static function now($adjust = '')
 	{
-		$tmp = Cookie::get($k);
-		$tmp = base64_decode($tmp);
-		$tmp = json_decode($tmp, true);
-		return $tmp;
+		$base_time = Config::get('base_time');
+		if (!empty($base_time))
+		{
+			return self::today() . ' ' . $base_time;
+		}
+		else
+		{
+			if (!empty($adjust))
+			{
+				return date('Y-m-d H:i:s', strtotime($adjust));
+			}
+			else
+			{
+				return date('Y-m-d H:i:s');
+			}
+		}
 	}
 
-	/**
-	 * PostgreSQLのpoint型から配列に変換します
-	 * @param type $point
-	 * @return type
-	 */
-	public static function point2array($point)
+	public static function ymdhism()
 	{
-		$point = str_replace(array('(', ')'), array('', ''), $point);
-		$tmp = explode(',', $point);
-		return array(
-			'lat' => @$tmp[0],
-			'lon' => @$tmp[1],
-		);
+		$t = time();
+		$mt = explode(' ', microtime());
+		$mt = explode('.', $mt[0]);
+		$mt = substr($mt[1], 0, 3);
+		return date('YmdHis', $t) . $mt;
+	}
+
+	public static function get_device($level = 1)
+	{
+		require_once APPPATH . 'vendor/Mobile-Detect-2.8.17/Mobile_Detect.php';
+
+		$md = new Mobile_Detect();
+
+		if ($md->isMobile())
+		{
+			if ($md->isTablet())
+			{
+				return 'tablet';
+			}
+			else
+			{
+				return 'phone';
+			}
+		}
+		else
+		{
+			return 'desktop';
+		}
+	}
+
+}
+
+class Logger
+{
+
+	public static function error($e)
+	{
+		Log::error('* ▼ **********************************************************************');
+		Log::error('MESSAGE\t:' . $e->getMessage());
+		Log::error('FILE\t:' . $e->getFile());
+		Log::error('LINE\t:' . $e->getLine());
+		Log::error('TRACE\t:\r\n' . $e->getTraceAsString());
+		Log::error('* ▲ ***********************************************************************');
+	}
+
+	public static function debug($obj, $method = "")
+	{
+		$now = date("Y-m-d H:m:i");
+		$msg = '- ' . $now . ' -----------------------------------------------------------------\n';
+		if (isset($method))
+		{
+			$msg .= $method . "\n";
+		}
+		if ($obj instanceof Exception)
+		{
+			self::error($obj);
+			return;
+		}
+		else if (is_object($obj))
+		{
+			$msg .= var_export($obj, true);
+		}
+		else if (is_array($obj))
+		{
+			$msg .= var_export($obj, true);
+		}
+		else if (is_null($obj))
+		{
+			$msg .= "null";
+		}
+		else
+		{
+			$msg .= $obj;
+		}
+		Log::info($msg);
+	}
+
+}
+
+class Util
+{
+
+	public static function set_cookie($k, $v)
+	{
+		//$tmp = json_encode($v);
+		//$tmp = base64_encode($tmp); // ダブルクオーテーションがエスケープされるため
+		//Cookie::set($k, $tmp);		
+		Cookie::set($k, serialize($v));
+	}
+
+	public static function get_cookie($k)
+	{
+		//$tmp = Cookie::get($k);
+		//$tmp = base64_decode($tmp);
+		//$tmp = json_decode($tmp, true);
+		//return $tmp;
+		return unserialize(Cookie::get($k));
 	}
 
 	public static function csv2arr($data, $enc = 'sjis-win', $ln = '\r\n')
@@ -58,55 +162,6 @@ class Common
 	{
 		$val = str_replace(array('_', '-', '.'), array('+', '/', '='), $val);
 		return base64_decode($val);
-	}
-
-	public static function base64_image_decode($val)
-	{
-		$val = str_replace(array('_', '-', '.'), array('+', '/', '='), $val);
-		return base64_decode($val);
-	}
-
-	public static function today()
-	{
-		$baseDate = Config::get('base_date');
-		if (!empty($baseDate))
-		{
-			return $baseDate;
-		}
-		else
-		{
-			return date('Y-m-d');
-		}
-	}
-
-	public static function now($adjust = '')
-	{
-		$baseTime = Config::get('base_time');
-		if (!empty($baseTime))
-		{
-			return self::today() . ' ' . $baseTime;
-		}
-		else
-		{
-
-			if (!empty($adjust))
-			{
-				return date('Y-m-d H:i:s', strtotime($adjust));
-			}
-			else
-			{
-				return date('Y-m-d H:i:s');
-			}
-		}
-	}
-
-	public static function nowTimestamp()
-	{
-		$t = time();
-		$mt = explode(' ', microtime());
-		$mt = explode('.', $mt[0]);
-		$mt = substr($mt[1], 0, 3);
-		return date('YmdHis', $t) . $mt;
 	}
 
 	public static function sendmail($email, $bccAdmin = false)
@@ -140,77 +195,8 @@ class Common
 			$cc = $email->get_cc();
 			$cc = (count($cc) == 0) ? '' : key($cc);
 			Log::error('メール送信に失敗しました。（from:' . $from . '／to:' . $to . '／cc:' . $cc . '／subject:' . $email->get_subject() . '）');
-			Common::error($e);
+			Logger::error($e);
 			return false;
-		}
-	}
-
-	public static function error($e)
-	{
-		Log::error('* ▼ **********************************************************************');
-		Log::error('MESSAGE\t:' . $e->getMessage());
-		Log::error('FILE\t:' . $e->getFile());
-		Log::error('LINE\t:' . $e->getLine());
-		Log::error('TRACE\t:\r\n' . $e->getTraceAsString());
-		Log::error('* ▲ ***********************************************************************');
-	}
-
-	public static function zipcode2address($zipcode)
-	{
-		$zipcode = Model_Db_Mzipcode::find_by('m_zipcode_zipcode', $zipcode);
-		if (empty($zipcode))
-		{
-			return '';
-		}
-		$zipcode = $zipcode[0];
-		return $zipcode->m_zipcode_pref . ' ' . $zipcode->m_zipcode_city . ' ' . $zipcode->m_zipcode_town;
-	}
-
-	public static function zipcode2eachcode($zipcode)
-	{
-		$zipcode = Model_Db_Mzipcode::find_by('m_zipcode_zipcode', $zipcode);
-		if (empty($zipcode))
-		{
-			return array('', '', '');
-		}
-		$zipcode = $zipcode[0];
-		$prefCd = substr($zipcode->m_zipcode_code, 0, 2);
-		$cityCd = substr($zipcode->m_zipcode_code, 2, 3);
-		$townCd = $zipcode->m_zipcode_zipcode;
-		return array($prefCd, $cityCd, $townCd);
-	}
-
-	/**
-	 * メールアドレスから＠マーク前の部分を取得します
-	 * @param type $mailAddress
-	 * @return type
-	 */
-	public static function mailaddress2nickname($mailAddress)
-	{
-		$tmp = explode('@', $mailAddress);
-		return @$tmp[0];
-	}
-
-	public static function get_device($level = 1)
-	{
-		require_once APPPATH . 'vendor/Mobile-Detect-2.8.17/Mobile_Detect.php';
-
-		$md = new Mobile_Detect();
-
-		if ($md->isMobile())
-		{
-			if ($md->isTablet())
-			{
-				return 'tablet';
-			}
-			else
-			{
-				return 'phone';
-			}
-		}
-		else
-		{
-			return 'desktop';
 		}
 	}
 
@@ -288,7 +274,7 @@ class Page
 class FileUtil
 {
 
-	public static function deleteFile($dir)
+	public static function delete_file($dir)
 	{
 		if ($dirhandle = opendir($dir))
 		{
@@ -401,7 +387,7 @@ class Api
 		}
 		catch (Exception $e)
 		{
-			Common::error($e);
+			Logger::error($e);
 			curl_close($curl);
 		}
 

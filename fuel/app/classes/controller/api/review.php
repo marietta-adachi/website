@@ -48,7 +48,7 @@ class Controller_Api_Review extends Controller_Base_Api
 			$review->t_hospital_review_nickname = $param["nickname"];
 			$review->t_hospital_review_message = $param["message"];
 			$review->t_hospital_review_status = ReviewStatus::CLOSED;
-			$review->t_hospital_review_created_at = Common::now();
+			$review->t_hospital_review_created_at = System::now();
 			if ($review->save() == 0)
 			{
 				throw new Exception("病院評価登録に失敗しました");

@@ -30,7 +30,7 @@ class Model_Db_Operationlog extends Model_Db_Base
 		$row->operation_log_data_3 = $data3;
 		$row->operation_log_data_4 = $data4;
 		$row->operation_log_data_5 = $data5;
-		$row->operation_log_created_at = Common::now();
+		$row->operation_log_created_at = System::now();
 		$row->save();
 	}
 
