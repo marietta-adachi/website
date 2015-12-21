@@ -54,6 +54,11 @@ class Model_Db_Admin extends Model_Db_Base
 		return Session::get('admin');
 	}
 
+	public static function by_id($id)
+	{
+		return self::find_by_pk($id);
+	}
+
 	public function get_id()
 	{
 		return $this->admin_id;
