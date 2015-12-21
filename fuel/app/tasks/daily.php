@@ -5,10 +5,6 @@ namespace Fuel\Tasks;
 class Daily
 {
 
-	/**
-	 *
-	 * @return string
-	 */
 	public function set_reservable()
 	{
 		\Config::load("base");
@@ -22,5 +18,3 @@ class Daily
 	}
 
 }
-?>
-
