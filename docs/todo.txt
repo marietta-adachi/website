@@ -1,5 +1,10 @@
+	
+	package
+		remise
+		nifty
+		wordpress
+		etc.
 
-	SSL判定
 	メタ埋め込みの仕組み
 		tplに定義し、JSでくみたてる
 

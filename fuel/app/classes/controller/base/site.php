@@ -30,14 +30,14 @@ class Controller_Base_Site extends Controller_Base_Tpl
 		$image = empty($image) ? Uri::create('assets/img/common/logo_facebook.png', [], [], false) : $image;
 		$type = $article ? 'article' : 'website';
 
-		$ogp = array(
+		$ogp = [
 			'title' => $title,
 			'type' => $type,
 			'description' => $description,
 			'url' => $url,
 			'image' => $image,
 			'site_name' => Config::get('system.name'),
-		);
+		];
 
 		$this->template->set_global('ogp', $ogp);
 	}
@@ -47,11 +47,11 @@ class Controller_Base_Site extends Controller_Base_Tpl
 		$title = empty($title) ? Config::get('twitter.title') : $title;
 		$tags = count($tags) == 0 ? Config::get('twitter.tags') : $tags;
 
-		$twitter = array(
+		$twitter = [
 			'title' => $title,
 			'tags' => implode(',', $tags),
 			'url' => empty($url) ? Uri::create('/', [], [], false) : $url,
-		);
+		];
 
 		$this->template->set_global('twitter', $twitter);
 	}

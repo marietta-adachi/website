@@ -10,83 +10,27 @@ class Controller_Base_Tpl extends Controller_Template
 	protected $_h1 = '';
 	protected $_messages = [];
 
-
 	public function router($method, $params)
 	{
 		Config::load('base');
 
-		//$action = $this->request->controller . '_' . $this->request->action;
-		$action = $this->request->route->translation ;
-		Logger::params($action,Input::all(),$this->params());
-
-		// ssl
-		$cfg = empty($this->subsystem) ? 'site' : 'site.' . $this->subsystem;
-		list($need, $action_list, $both_list) = $this->get_onoff(Config::get($cfg . '.ssl'));
-		$redirect = false;
-		if (empty($both_list) || !in_array($action, $both_list))
+		if (is_callable([$this, 'auth_redirect']))
 		{
-			$ssl = Input::protocol() == 'http';
-			if ($ssl)
+			if ($this->auth_redirect($this->is_login()))
 			{
-				$redirect = $need ? in_array($action, $action_list) : !in_array($action, $action_list);
-			}
-			else
-			{
-				$redirect = $need ? !in_array($action, $action_list) : in_array($action, $action_list);
+				return Response::redirect($this->subsystem . '/auth');
 			}
 		}
-		if ($redirect)
+		if (is_callable([$this, 'ssl_redirect']))
 		{
-			return Response::redirect(Uri::create(Input::uri(), [], [], $ssl));
-		}
-
-		// authentication
-		$flg = false;
-		list($need, $action_list, $both_list) = $this->get_onoff(Config::get($cfg . '.auth'));
-		if (empty($both_list) || !in_array($action, $both_list))
-		{
-			if ($this->is_login())
+			if ($this->ssl_redirect())
 			{
-				$flg = $need ? !in_array($action, $action_list) : in_array($action, $action_list);
-			}
-			else
-			{
-				$flg = $need ? in_array($action, $action_list) : !in_array($action, $action_list);
+				return Response::redirect(Uri::create(Input::uri(), [], [], true));
 			}
 		}
-		if ($flg)
-		{
-			return Response::redirect($this->subsystem . '/auth');
-		}
 
-		// call controller
-		$call = 'action_' . $this->request->action;
-		if (is_callable([$this, $call]))
-		{
-			$this->$call($params);
-		}
-	}
-
-	private function get_onoff($config)
-	{
-		$both = null;
-		if (array_key_exists('both', $config))
-		{
-			$both = $config['both'];
-		}
-
-		if (array_key_exists('on', $config))
-		{
-			return [true, $config['on'], $both];
-		}
-		else if (array_key_exists('off', $config))
-		{
-			return [false, $config['off'], $both];
-		}
-		else
-		{
-			null;
-		}
+		$function = 'action_' . $this->request->action;
+		$this->$function($params);
 	}
 
 	protected function post($tplname, $layer = '')
@@ -94,8 +38,7 @@ class Controller_Base_Tpl extends Controller_Template
 		// screen
 		Log::info($tplname);
 		$tmp[] = 'site';
-		if (!empty($layer))
-			$tmp[] = $layer;
+		if (!empty($layer)) $tmp[] = $layer;
 		$tmp[] = 'meta';
 		$meta = Config::get(implode('.', $tmp));
 
@@ -431,8 +374,6 @@ class Controller_Base_Tpl extends Controller_Template
 
 		return Upload::get_files();
 	}
-
-	
 
 	/* public function special()
 	  {

@@ -3,6 +3,8 @@
 class Controller_Admin_User extends Controller_Base_Admin
 {
 
+	use Controller_Base_Plugin_Auth;
+
 	private function get_criteria_form()
 	{
 		$form = Fieldset::instance();
@@ -26,7 +28,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 		{
 			$d = $this->get_criteria($d, ['status' => [St::VALID, St::INVALID], 'order' => 'id']);
 			$count = Model_Db_User::count_by($d);
-			$page = Page::get_page('admin/user', $d, $count, Config::get('site.admin.page_limit.user'));
+			$page = Page::get_page('admin/user', $d, $count);
 			$list = Model_Db_User::by($d, $page);
 		}
 

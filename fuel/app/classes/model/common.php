@@ -242,9 +242,14 @@ class Util
 class Page
 {
 
-	public static function get_page($action, $c, $count, $per_page = 10, $name = 'bootstrap3_ma')
+	public static function get_page($action, $c, $count, $name = 'bootstrap3_ma')
 	{
 		$segment = 'p';
+
+		if (!array_key_exists('per_page', $c))
+		{
+			$per_page = 20;
+		}
 
 		// ページ数
 		$crr_page = 1;
