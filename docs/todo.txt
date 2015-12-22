@@ -3,6 +3,8 @@
 	http://kazuhei.hatenablog.com/entry/2014/08/30/012257
 	
 	Ormに切り替え
+		php oil g model --force template varchar:varchar[255] enum:enum[valid,invalid] string:string[255] int:int decimal:decimal[5,2] float:float[10,5] text:text blob:blob datetime:datetime date:date timestamp:timestamp time:time
+		
 	variousにいろいろ
 		http://runble1.com/fulephp-orm/
 

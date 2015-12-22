@@ -70,78 +70,6 @@ class System
 
 }
 
-class Logger
-{
-
-	public static function params($action, $all, $params)
-	{
-		Log::info('ACTION : ' . $action);
-		foreach ($all as $k => $v)
-		{
-			if (is_array($v))
-			{
-				foreach ($v as $k2 => $v2)
-				{
-					Log::info($k . ' : ' . $v2);
-				}
-			}
-			else
-			{
-				Log::info($k . ' : ' . $v);
-			}
-		}
-
-		// routes.phpの名前付きパラメータ確認
-		foreach ($params as $k => $v)
-		{
-			Log::info($k . ' : ' . $v);
-		}
-	}
-
-	public static function error($e)
-	{
-		Log::error('* ▼ **********************************************************************');
-		Log::error('MESSAGE\t:' . $e->getMessage());
-		Log::error('FILE\t:' . $e->getFile());
-		Log::error('LINE\t:' . $e->getLine());
-		Log::error('TRACE\t:\r\n' . $e->getTraceAsString());
-		Log::error('* ▲ ***********************************************************************');
-	}
-
-	public static function debug($obj, $method = "")
-	{
-		$now = date("Y-m-d H:m:i");
-		$msg = '- ' . $now . ' -----------------------------------------------------------------\n';
-		if (isset($method))
-		{
-			$msg .= $method . "\n";
-		}
-		if ($obj instanceof Exception)
-		{
-			self::error($obj);
-			return;
-		}
-		else if (is_object($obj))
-		{
-			$msg .= var_export($obj, true);
-		}
-		else if (is_array($obj))
-		{
-			$msg .= var_export($obj, true);
-		}
-		else if (is_null($obj))
-		{
-			$msg .= "null";
-		}
-		else
-		{
-			$msg .= $obj;
-		}
-		Log::info($msg);
-	}
-
-}
-
 class Util
 {
 
@@ -422,6 +350,78 @@ class Api
 		}
 
 		return $res;
+	}
+
+}
+
+class Logger
+{
+
+	public static function params($action, $all, $params)
+	{
+		Log::info('ACTION : ' . $action);
+		foreach ($all as $k => $v)
+		{
+			if (is_array($v))
+			{
+				foreach ($v as $k2 => $v2)
+				{
+					Log::info($k . ' : ' . $v2);
+				}
+			}
+			else
+			{
+				Log::info($k . ' : ' . $v);
+			}
+		}
+
+		// routes.phpの名前付きパラメータ確認
+		foreach ($params as $k => $v)
+		{
+			Log::info($k . ' : ' . $v);
+		}
+	}
+
+	public static function error($e)
+	{
+		Log::error('* ▼ **********************************************************************');
+		Log::error('MESSAGE\t:' . $e->getMessage());
+		Log::error('FILE\t:' . $e->getFile());
+		Log::error('LINE\t:' . $e->getLine());
+		Log::error('TRACE\t:\r\n' . $e->getTraceAsString());
+		Log::error('* ▲ ***********************************************************************');
+	}
+
+	public static function debug($obj, $method = "")
+	{
+		$now = date("Y-m-d H:m:i");
+		$msg = '- ' . $now . ' -----------------------------------------------------------------\n';
+		if (isset($method))
+		{
+			$msg .= $method . "\n";
+		}
+		if ($obj instanceof Exception)
+		{
+			self::error($obj);
+			return;
+		}
+		else if (is_object($obj))
+		{
+			$msg .= var_export($obj, true);
+		}
+		else if (is_array($obj))
+		{
+			$msg .= var_export($obj, true);
+		}
+		else if (is_null($obj))
+		{
+			$msg .= "null";
+		}
+		else
+		{
+			$msg .= $obj;
+		}
+		Log::info($msg);
 	}
 
 }

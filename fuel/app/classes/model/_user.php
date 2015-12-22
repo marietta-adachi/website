@@ -1,45 +1,37 @@
 <?php
 
-class Model_User extends \Orm\Model
+class Model_User extends Model_Base
 {
 
-	protected static $_properties = array(
-		'id',
-		'name',
-		'email',
-		'password',
-		'status',
-		'last_login',
-		'created_at',
-		'updated_at',
-		'deleted_at',
-	);
-	protected static $_observers = array(
-		'Orm\Observer_CreatedAt' => array(
-			'events' => array('before_insert'),
-			'mysql_timestamp' => true,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_update'),
-			'mysql_timestamp' => true,
-		),
-	);
-	protected static $_table_name = 'users';
+	// table
+	protected static $_table_name = 'user';
+	// columns
+	protected static $_user_id = 'user_id';
+	protected static $_user_name = 'user_name';
+	protected static $_user_email = 'user_email';
+	protected static $_user_password = 'user_password';
+	protected static $_user_status = 'user_status';
+	protected static $_user_last_login = 'user_last_login';
+	protected static $_user_created_at = 'user_created_at';
+	protected static $_user_updated_at = 'user_updated_at';
+	protected static $_user_deleted_at = 'user_deleted_at';
+	// key
+	protected static $_primary_key = 'user_id';
 
 	public static function login($email, $password, $remember)
 	{
-		$row = self::find_one_by(array('email' => $email, 'status' => St::VALID,));
+		$row = self::find_one_by(array('user_email' => $email, 'user_status' => St::VALID,));
 		if (empty($row))
 		{
 			return false;
 		}
 
-		if ($row->password != Auth::hash_password($password))
+		if ($row->user_password != Auth::hash_password($password))
 		{
 			return false;
 		}
 
-		$row->last_login = System::now();
+		$row->user_last_login = System::now();
 		$row->save();
 
 		Session::create();
@@ -68,14 +60,14 @@ class Model_User extends \Orm\Model
 	public static function anew()
 	{
 		$row = parent::forge();
-		$row->created_at = System::now(); // TODO
+		$row->user_created_at = System::now(); // TODO
 		return $row;
 	}
 
 	public function del_logical()
 	{
 		$row = parent::forge();
-		$row->deleted_at = System::now(); // TODO
+		$row->user_deleted_at = System::now(); // TODO
 		if ($row->save() == 1)
 		{
 			return true;
@@ -85,19 +77,19 @@ class Model_User extends \Orm\Model
 
 	public static function byTest()
 	{
-		$tmp = self::exec('select email from user where false');
+		$tmp = self::exec('select user_email from user where false');
 		return $tmp;
 	}
 
 	public static function unique_name($id, $name)
 	{
-		$list = self::exec('select id from user where name = :name', ['name' => $name]);
+		$list = self::exec('select user_id from user where user_name = :name', ['name' => $name]);
 		return count($list) == 0;
 	}
 
 	public static function unique_email($id, $email)
 	{
-		$list = self::exec('select id from user where email = :email', ['email' => $email]);
+		$list = self::exec('select user_id from user where user_email = :email', ['email' => $email]);
 		return count($list) == 0;
 	}
 
@@ -114,7 +106,7 @@ class Model_User extends \Orm\Model
 		$sql = 'select ';
 		if ($count)
 		{
-			$sql .= ' count(u.id) as count ';
+			$sql .= ' count(u.user_id) as count ';
 		}
 		else
 		{
@@ -131,14 +123,14 @@ class Model_User extends \Orm\Model
 		 */
 		$p = [];
 		$sql .= ' where true ';
-		$sql .= ' and u.status = ' . St::VALID;
+		$sql .= ' and u.user_status = ' . St::VALID;
 		if (!empty($c['freeword']))
 		{
 			$sql.= ' and (false ';
-			$sql.= ' or u.name like :name ';
+			$sql.= ' or u.user_name like :name ';
 			$p['name'] = '%' . $c['freeword'] . '%';
 
-			$sql.= ' or u.email like :email ';
+			$sql.= ' or u.user_email like :email ';
 			$p['email'] = '%' . $c['freeword'] . '%';
 			$sql.= ' ) ';
 		}
@@ -148,7 +140,7 @@ class Model_User extends \Orm\Model
 		 */
 		if (!$count)
 		{
-			$orders[] = 'id asc';
+			$orders[] = 'user_id asc';
 			if (!empty($c['order']))
 			{
 				if (array_key_exists($c['order'], self::$order))
@@ -156,14 +148,14 @@ class Model_User extends \Orm\Model
 					$tmp = self::$order[$c['order']][0];
 					$tmp = explode('-', $tmp);
 					$nulls = (@$tmp[2] == 'l') ? 'nulls last' : 'nulls first';
-					$orders[] = $tmp[0] . ' ' . $tmp[1] . ' '; // . $nulls;
+					$orders[] = $tmp[0] . ' ' . $tmp[1] . ' ';// . $nulls;
 				}
 			}
 			$orders = implode(',', $orders);
 			$sql .= ' order by ' . $orders . ' ';
 		}
 
-
+		
 		if ($count)
 		{
 			$res = self::exec($sql, $p);
@@ -177,20 +169,20 @@ class Model_User extends \Orm\Model
 	}
 
 	public static $order = array(
-		'id' => ['id-asc', '順'],
-		'name' => ['name-asc', '順'],
-		'email' => ['email-asc', '順'],
-		'stamp' => ['updated_at-desc', '順'],
+		'id' => ['user_id-asc', '順'],
+		'name' => ['user_name-asc', '順'],
+		'email' => ['user_email-asc', '順'],
+		'stamp' => ['user_updated_at-desc', '順'],
 	);
 
 	public function get_id()
 	{
-		return $this->id;
+		return $this->user_id;
 	}
 
 	public function get_email()
 	{
-		return $this->email;
+		return $this->user_email;
 	}
 
 }

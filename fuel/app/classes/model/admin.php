@@ -1,39 +1,47 @@
 <?php
 
-class Model_Admin extends Model_Base
+class Model_Admin extends \Orm\Model
 {
 
-	// table
+	protected static $_properties = array(
+		'id',
+		'name',
+		'email',
+		'password',
+		'status',
+		'last_login',
+		'created_at',
+		'updated_at',
+		'deleted_at',
+	);
+	protected static $_observers = array(
+		'Orm\Observer_CreatedAt' => array(
+			'events' => array('before_insert'),
+			'mysql_timestamp' => true,
+		),
+		'Orm\Observer_UpdatedAt' => array(
+			'events' => array('before_update'),
+			'mysql_timestamp' => true,
+		),
+	);
 	protected static $_table_name = 'admin';
-	//columns
-	protected static $_admin_id = 'admin_id';
-	protected static $_admin_name = 'admin_name';
-	protected static $_admin_email = 'admin_email';
-	protected static $_admin_password = 'admin_password';
-	protected static $_admin_status = 'admin_status';
-	protected static $_admin_last_login = 'admin_last_login';
-	protected static $_admin_created_at = 'admin_created_at';
-	protected static $_admin_updated_at = 'admin_updated_at';
-	protected static $_admin_deleted_at = 'admin_deleted_at';
-	// key
-	protected static $_primary_key = 'admin_id';
 
 	public static function login($email, $password, $remember)
 	{
-		$row = self::find_one_by(array('admin_email' => $email, 'admin_status' => St::VALID,));
+		$row = self::find_one_by(array('email' => $email, 'status' => St::VALID,));
 		if (empty($row))
 		{
 			return false;
 		}
 
 
-		//if ($row->admin_password != Auth::hash_password($password))
-		if ($row->admin_password != $password)
+		//if ($row->password != Auth::hash_password($password))
+		if ($row->password != $password)
 		{
 			return false;
 		}
 
-		$row->admin_last_login = System::now();
+		$row->last_login = System::now();
 		$row->save();
 
 		Session::create();
@@ -61,17 +69,18 @@ class Model_Admin extends Model_Base
 
 	public function get_id()
 	{
-		return $this->admin_id;
+		return $this->id;
 	}
 
 	public function get_name()
 	{
-		return $this->admin_name;
+		return $this->name;
 	}
 
 	public function get_XXXXX()
 	{
 		
 	}
+
 
 }

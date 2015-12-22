@@ -16,14 +16,14 @@ class Controller_Base_Tpl extends Controller_Template
 
 		if (is_callable([$this, 'auth_redirect']))
 		{
-			if ($this->auth_redirect($this->is_login()))
+			if ($this->auth_redirect($this))
 			{
 				return Response::redirect($this->subsystem . '/auth');
 			}
 		}
 		if (is_callable([$this, 'ssl_redirect']))
 		{
-			if ($this->ssl_redirect())
+			if ($this->ssl_redirect($this))
 			{
 				return Response::redirect(Uri::create(Input::uri(), [], [], true));
 			}

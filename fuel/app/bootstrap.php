@@ -31,4 +31,5 @@ Fuel::init('config.php');
 
 require_once( APPPATH .'classes/various/common.php');
 require_once( APPPATH .'classes/various/constant.php');
+require_once( APPPATH .'tasks/base.php');
 //Autoloader::add_namespace('Util', APPPATH.'vendor/util/');
