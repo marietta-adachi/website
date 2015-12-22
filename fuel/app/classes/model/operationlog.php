@@ -1,6 +1,6 @@
 <?php
 
-class Model_Db_Operationlog extends Model_Db_Base
+class Model_Operationlog extends Model_Base
 {
 
 	// table
@@ -21,6 +21,7 @@ class Model_Db_Operationlog extends Model_Db_Base
 
 	public static function write($type, $user, $action, $data1 = null, $data2 = null, $data3 = null, $data4 = null, $data5 = null)
 	{
+		
 		$row = self::forge();
 		$row->operation_log_type = $type;
 		$row->operation_log_user_id = empty($user) ? 'anyone' : $user->get_id();

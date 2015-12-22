@@ -56,7 +56,7 @@ class Controller_Admin_Settings extends Controller_Base_Admin
 			return;
 		}
 
-		$admin = Model_Db_Admin::by_session();
+		$admin = Model_Admin::by_session();
 		$admin->admin_email = $d["email"];
 		$admin->admin_updated_at = System::now();
 		$admin->save();
@@ -92,7 +92,7 @@ class Controller_Admin_Settings extends Controller_Base_Admin
 			return;
 		}
 
-		$admin = Model_Db_Admin::by_session();
+		$admin = Model_Admin::by_session();
 		if ($admin->admin_password != Auth::hash_password($d["password_crr"]))
 		{
 			$this->msg(['password_crr', '現在のパスワードが間違っています']);

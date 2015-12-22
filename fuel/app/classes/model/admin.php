@@ -1,6 +1,6 @@
 <?php
 
-class Model_Db_Admin extends Model_Db_Base
+class Model_Admin extends Model_Base
 {
 
 	// table

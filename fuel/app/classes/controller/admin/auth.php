@@ -35,7 +35,7 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 			return;
 		}
 
-		if (!Model_Db_Admin::login($d['email'], $d['password'], $d['remember']))
+		if (!Model_Admin::login($d['email'], $d['password'], $d['remember']))
 		{
 			$this->msg('メールアドレスまたはパスワードが違います');
 			$this->action_index();
@@ -47,7 +47,7 @@ class Controller_Admin_Auth extends Controller_Base_Admin
 
 	public function action_logout()
 	{
-		Model_Db_Admin::logout();
+		Model_Admin::logout();
 		return Response::redirect('admin');
 	}
 

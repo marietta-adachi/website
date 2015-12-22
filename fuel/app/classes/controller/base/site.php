@@ -14,12 +14,12 @@ class Controller_Base_Site extends Controller_Base_Tpl
 
 	protected function is_login()
 	{
-		return !empty(Model_Db_User::by_session());
+		return !empty(Model_User::by_session());
 	}
 
 	protected function get_user()
 	{
-		return Model_Db_User::by_session();
+		return Model_User::by_session();
 	}
 
 	protected function set_facebook($url = '', $image = '', $title = '', $description = '', $article = false)

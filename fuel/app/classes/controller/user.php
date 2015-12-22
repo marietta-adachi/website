@@ -6,7 +6,7 @@ class Controller_User extends Controller_Base_Site
 	public function action_index()
 	{
 
-		$res = Model_Db_User::byCustom();
+		$res = Model_User::byCustom();
 
 //throw new \HttpServerErrorException();
 		$d['user_list'] =$res;
@@ -30,7 +30,7 @@ class Controller_User extends Controller_Base_Site
 
 	public function tran()
 	{
-		$user = Model_Db_User::anew();
+		$user = Model_User::anew();
 		$user->user_name = 'あだち　こう';
 		$user->user_email = 'adachi@marietta.co.jp';
 		$user->user_password = md5('123456');
@@ -43,7 +43,7 @@ class Controller_User extends Controller_Base_Site
 		}
 
 
-		$user = Model_Db_User::anew();
+		$user = Model_User::anew();
 		$user->user_name = 'あだち　こう';
 		$user->user_email = 'adachi@marietta.co.jp';
 		$user->user_password = md5('123456');

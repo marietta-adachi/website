@@ -14,7 +14,7 @@ class Controller_Api_Review extends Controller_Base_Api
 
 			// 取得
 			$hospitalId = $param["hospital_id"];
-			$reviewList = Model_Db_Qcommon::getHospitalReviewList($hospitalId);
+			$reviewList = Model_Qcommon::getHospitalReviewList($hospitalId);
 
 			$tmp = Cookie::get("review_" . $hospitalId);
 			$res["reviewed"] = !empty($tmp);
@@ -43,7 +43,7 @@ class Controller_Api_Review extends Controller_Base_Api
 			$hospitalId = $param["hospital_id"];
 
 			// 登録
-			$review = Model_Db_Thospitalreview::forge();
+			$review = Model_Thospitalreview::forge();
 			$review->t_hospital_review_hospital_id = $hospitalId;
 			$review->t_hospital_review_nickname = $param["nickname"];
 			$review->t_hospital_review_message = $param["message"];

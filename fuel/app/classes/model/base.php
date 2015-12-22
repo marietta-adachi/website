@@ -1,6 +1,6 @@
 <?php
 
-class Model_Db_Base extends Model_Crud
+class Model_Base extends Model_Crud
 {
 
 	protected static function exec($sql, $p = [], $limit = 1000, $offset = 0, $cache = false)

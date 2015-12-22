@@ -27,14 +27,14 @@ class Controller_Admin_User extends Controller_Base_Admin
 		if ($d)
 		{
 			$d = $this->get_criteria($d, ['status' => [St::VALID, St::INVALID], 'order' => 'id']);
-			$count = Model_Db_User::count_by($d);
+			$count = Model_User::count_by($d);
 			$page = Page::get_page('admin/user', $d, $count);
-			$list = Model_Db_User::by($d, $page);
+			$list = Model_User::by($d, $page);
 		}
 
 		$d['count'] = $count? : 0;
 		$d['list'] = $list? : [];
-		$d['order_list'] = Model_Db_User::$order;
+		$d['order_list'] = Model_User::$order;
 		$d['offset'] = $page->offset;
 		$d['per_page'] = $page->per_page;
 
@@ -68,7 +68,7 @@ class Controller_Admin_User extends Controller_Base_Admin
 			$d = Input::get();
 			if ($d['ope'] == Ope::MODIFY)
 			{
-				$user = Model_Db_User::by_id($d['id']);
+				$user = Model_User::by_id($d['id']);
 				$d['id'] = $user->user_id;
 				$d['name'] = $user->user_name;
 				$d['email'] = $user->user_email;
@@ -94,11 +94,11 @@ class Controller_Admin_User extends Controller_Base_Admin
 			return;
 		}
 
-		if (!Model_Db_User::unique_email($d['email']))
+		if (!Model_User::unique_email($d['email']))
 		{
 			$this->msg(['email' => 'このメールアドレスは使用されています']);
 		}
-		if (!Model_Db_User::unique_name($d['name']))
+		if (!Model_User::unique_name($d['name']))
 		{
 			$this->msg(['name' => 'この名前は使用されています']);
 		}
@@ -131,12 +131,12 @@ class Controller_Admin_User extends Controller_Base_Admin
 		$user = null;
 		if ($d['ope'] == Ope::ADD)
 		{
-			$user = Model_Db_User::anew();
+			$user = Model_User::anew();
 			$user->user_password = Auth::hash_password(Str::random('alnum', 6));
 		}
 		else
 		{
-			$user = Model_Db_User::by_id($d['id']);
+			$user = Model_User::by_id($d['id']);
 		}
 		$user->user_name = $d['name'];
 		$user->user_email = $d['email'];

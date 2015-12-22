@@ -1,6 +1,6 @@
 <?php
 
-class Model_Db_User extends Model_Db_Base
+class Model_User extends Model_Base
 {
 
 	// table

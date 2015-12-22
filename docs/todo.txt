@@ -1,7 +1,9 @@
+	
+	
 	http://kazuhei.hatenablog.com/entry/2014/08/30/012257
 	
-	Orm
-	vendorに
+	Ormに切り替え
+	variousにいろいろ
 		http://runble1.com/fulephp-orm/
 
 	package

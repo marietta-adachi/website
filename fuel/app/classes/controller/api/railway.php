@@ -7,7 +7,7 @@ class Controller_Api_Railway extends Controller_Base_Api
 	{
 		try
 		{
-			$prefList = Model_Db_Mprefecture::find_all();
+			$prefList = Model_Mprefecture::find_all();
 			if (count($prefList) == 0)
 			{
 				throw new Exception("都道府県一覧取得に失敗しました");
