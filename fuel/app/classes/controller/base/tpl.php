@@ -318,9 +318,9 @@ class Controller_Base_Tpl extends Controller_Template
 
 	protected function transaction($action)
 	{
-		DB::start_transaction();
 		try
 		{
+			DB::start_transaction();
 			$res = $this->$action();
 			if (!$res)
 			{

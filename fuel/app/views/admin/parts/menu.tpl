@@ -11,8 +11,8 @@
 			<img src="assets/img/admin/user.jpg" alt="..." class="img-circle profile_img">
 		</div-->
 		<!--div class="profile_info"-->
-			<span>{$user.admin_last_login}</span>
-			<h2>{$user.admin_name}</h2>
+			<span>{$user.last_login|default}</span>
+			<h2>{$user.name|default}</h2>
 		<!--/div-->
 	</div>
 	<div class="clearfix"></div>

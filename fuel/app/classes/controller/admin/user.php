@@ -69,10 +69,10 @@ class Controller_Admin_User extends Controller_Base_Admin
 			if ($d['ope'] == Ope::MODIFY)
 			{
 				$user = Model_User::by_id($d['id']);
-				$d['id'] = $user->user_id;
-				$d['name'] = $user->user_name;
-				$d['email'] = $user->user_email;
-				$d['status'] = $user->user_status;
+				$d['id'] = $user->id;
+				$d['name'] = $user->name;
+				$d['email'] = $user->email;
+				$d['status'] = $user->status;
 			}
 		}
 
@@ -94,11 +94,11 @@ class Controller_Admin_User extends Controller_Base_Admin
 			return;
 		}
 
-		if (!Model_User::unique_email($d['email']))
+		if (!Model_User::unique_email($d['id'],$d['email']))
 		{
 			$this->msg(['email' => 'このメールアドレスは使用されています']);
 		}
-		if (!Model_User::unique_name($d['name']))
+		if (!Model_User::unique_name($d['id'],$d['name']))
 		{
 			$this->msg(['name' => 'この名前は使用されています']);
 		}
@@ -111,12 +111,12 @@ class Controller_Admin_User extends Controller_Base_Admin
 		$this->template->content = View_Smarty::forge('admin/user/confirm', $d);
 	}
 
-	public function action_do()
+	public function action_do_()
 	{
 		$this->transaction('update');
 	}
 
-	public function update()
+	public function action_do()
 	{
 		$this->verify_csrf();
 
@@ -127,21 +127,19 @@ class Controller_Admin_User extends Controller_Base_Admin
 			return;
 		}
 
-		$now = System::now();
 		$user = null;
 		if ($d['ope'] == Ope::ADD)
 		{
-			$user = Model_User::anew();
-			$user->user_password = Auth::hash_password(Str::random('alnum', 6));
+			$user = Model_User::forge();
+			$user->password = Auth::hash_password('123456');//Str::random('alnum', 6));
 		}
 		else
 		{
 			$user = Model_User::by_id($d['id']);
 		}
-		$user->user_name = $d['name'];
-		$user->user_email = $d['email'];
-		$user->user_status = $d['status'];
-		$user->user_updated_at = $now;
+		$user->name = $d['name'];
+		$user->email = $d['email'];
+		$user->status = $d['status'];
 		$user->save();
 
 		$this->template->content = View_Smarty::forge('admin/user/do', $d);

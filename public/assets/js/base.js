@@ -21,23 +21,23 @@ $(function () {
 	});
 	Address.prefs().done(function (data) {
 		$("#pref, #city, #town").children().remove();
-		$.each(data, function (k, v) {
-			$("#pref").append($("<option />").val(k).html(v));
+		$.each(data.body, function (k, v) {
+			$("#pref").append($("<option />").val(v.pref_id).html(v.pref_name));
 		});
 	});
 	$("#pref").on("change", function () {
 		Address.cities($(this).val()).done(function (data) {
 			$("#city, #town").children().remove();
-			$.each(data, function (k, v) {
-				$("#city").append($("<option />").val(k).html(v));
+			$.each(data.body, function (k, v) {
+				$("#city").append($("<option />").val(v.city_id).html(v.city_name));
 			});
 		});
 	});
 	$("#city").on("change", function () {
 		Address.towns($(this).val()).done(function (data) {
 			$("#town").children().remove();
-			$.each(data, function (k, v) {
-				$("#town").append($("<option />").val(k).html(v));
+			$.each(data.body, function (k, v) {
+				$("#town").append($("<option />").val(v.id).html(v.town_name + v.block_name));
 			});
 		});
 	});

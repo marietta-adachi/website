@@ -1,6 +1,6 @@
 <?php
 
-class Model_Log extends \Orm\Model
+class Model_Log extends Model_Base
 {
 
 	protected static $_properties = array(
@@ -28,7 +28,7 @@ class Model_Log extends \Orm\Model
 
 		$row = self::forge();
 		$row->type = $type;
-		$row->user_id = empty($user) ? 'anyone' : $user->get_id();
+		$row->user_id = empty($user) ? 0 : $user->get_id();
 		$row->action = $action;
 		$row->data_1 = $data1;
 		$row->data_2 = $data2;

@@ -31,11 +31,11 @@
 					<tbody>
 						{foreach from=$list item=row}
 							<tr>
-								<th scope="row">{$row.user_id}</th>
-								<td>{$row.user_name}</td>
-								<td>{$row.user_email}</td>
-								<td>{$row.user_status}</td>
-								<td><button type="button" class="btn btn-default btn-s" onclick="location.href = 'admin/user/edit?ope={Ope::MODIFY}&id={$row.user_id}'" >詳細</button></td>
+								<th scope="row">{$row.id}</th>
+								<td>{$row.name}</td>
+								<td>{$row.email}</td>
+								<td>{St::$name[$row.status]}</td>
+								<td><button type="button" class="btn btn-default btn-s" onclick="location.href = 'admin/user/edit?id={$row.id}&ope={Ope::MODIFY}'" >詳細</button></td>
 							</tr>
 						{/foreach}
 					</tbody>

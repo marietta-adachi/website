@@ -174,10 +174,8 @@ class Page
 	{
 		$segment = 'p';
 
-		if (!array_key_exists('per_page', $c))
-		{
-			$per_page = 20;
-		}
+		$per_page = @$c['per_page']?:20;
+		
 
 		// ページ数
 		$crr_page = 1;
@@ -357,10 +355,9 @@ class Api
 class Logger
 {
 
-	public static function params($action, $all, $params)
+	public static function params()
 	{
-		Log::info('ACTION : ' . $action);
-		foreach ($all as $k => $v)
+		foreach (Input::all() as $k => $v)
 		{
 			if (is_array($v))
 			{
@@ -376,10 +373,10 @@ class Logger
 		}
 
 		// routes.phpの名前付きパラメータ確認
-		foreach ($params as $k => $v)
+		/*foreach ($params as $k => $v)
 		{
 			Log::info($k . ' : ' . $v);
-		}
+		}*/
 	}
 
 	public static function error($e)

@@ -4,6 +4,7 @@ namespace Fuel\Migrations;
 
 class Create_admin
 {
+
 	public function up()
 	{
 		\DBUtil::create_table('admin', array(
@@ -12,15 +13,16 @@ class Create_admin
 			'email' => array('constraint' => 255, 'type' => 'varchar'),
 			'password' => array('constraint' => 255, 'type' => 'varchar'),
 			'status' => array('constraint' => '"valid","invalid"', 'type' => 'enum'),
-			'last_login' => array('type' => 'timestamp'),
+			'last_login' => array('type' => 'timestamp', 'null' => true),
 			'created_at' => array('type' => 'timestamp'),
 			'updated_at' => array('type' => 'timestamp'),
-			'deleted_at' => array('type' => 'timestamp'),
-		), array('id'));
+			'deleted_at' => array('type' => 'timestamp', 'null' => true),
+				), array('id'));
 	}
 
 	public function down()
 	{
 		\DBUtil::drop_table('admin');
 	}
+
 }

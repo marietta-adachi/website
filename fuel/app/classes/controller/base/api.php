@@ -3,51 +3,81 @@
 class Controller_Base_Api extends Controller_Rest
 {
 
+	protected $_errors = [];
+	protected $_body = null;
+
 	public function before()
 	{
 		parent::before();
 		Config::load('base');
 
-		foreach (Input::post() as $k => $v)
-		{
-			Log::info($k . '：' . $v);
-		}
-	}
+		Logger::params();
 
-	protected function checkCsrf($token = null)
-	{
-		if (!Security::check_token($token))
+		if (is_callable([$this, 'auth_redirect']))
 		{
-			Logger::error(new Exception('CSRF Error'));
-			//	Controller_Auth::logout();
-			return Response::redirect();
-		}
-	}
-
-	protected function validate($val, $value = null)
-	{
-		if (empty($value))
-		{
-			$value = Input::all();
-		}
-
-		if (!$val->run($value))
-		{
-			$msg = '';
-			foreach ($val->error() as $f => $e)
+			if ($this->auth_redirect($this))
 			{
-				$msg[] = $e;
+				Response::redirect('api/auth/unauthenticated.json');
 			}
-			throw new Exception(implode('／', $msg));
 		}
-
-		return $val->validated();
 	}
 
-	protected function error($e)
+	public function after($responce)
 	{
-		Logger::error($e);
-		$this->response(array('message' => $e->getMessage(),), 500);
+		$responce = parent::after($responce);
+
+		if (count($this->_errors) == 0)
+		{
+			$res['status'] = 'success';
+		}
+		else
+		{
+			$res['status'] = 'failed';
+			$res['errors'] = $this->_errors;
+		}
+		$res['body'] = $this->_body;
+
+		return $this->response($res);
 	}
+
+	protected function verify_csrf()
+	{
+		if (!Security::check_token())
+		{
+			$this->_errors[] = ApiError::TOKEN;
+			return false;
+		}
+		return true;
+	}
+
+	protected function verify($validation, $param = [])
+	{
+		$param = array_merge(Input::all(), $param);
+		if (!$validation->run($param))
+		{
+			$msg = [];
+			foreach ($validation->error() as $k => $m)
+			{
+				$msg[] = $m;
+			}
+			$this->_errors[] = [ApiError::VALIDATION => implode('／', $msg)];
+			return false;
+		}
+		return $validation->validated();
+	}
+
+	protected function is_login()
+	{
+		return !empty(Model_User::by_session());
+	}
+
+}
+
+class ApiError
+{
+
+	const UNAUTHENTICATED = [10 => 'Unauthenticated'];
+	const TOKEN = [20 => 'Invalid token'];
+	const VALIDATION = 30;
 
 }

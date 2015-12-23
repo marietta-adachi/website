@@ -1,0 +1,9 @@
+mysql -u root [database name] < [path]
+
+
+
+
+ad_address	address
+ken_id		pref_id
+ken_name	pref_name
+ken_furi	pref_furi

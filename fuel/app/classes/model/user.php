@@ -1,58 +1,11 @@
 <?php
 
-class Model_User extends \Orm\Model
+class Model_User extends Model_Base
 {
 
-	protected static $_properties = array(
-		'id',
-		'name',
-		'email',
-		'password',
-		'status',
-		'last_login',
-		'created_at',
-		'updated_at',
-		'deleted_at',
-	);
-	protected static $_observers = array(
-		'Orm\Observer_CreatedAt' => array(
-			'events' => array('before_insert'),
-			'mysql_timestamp' => true,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_update'),
-			'mysql_timestamp' => true,
-		),
-	);
-	protected static $_table_name = 'users';
-
-	public static function login($email, $password, $remember)
+	public static function by_id($id)
 	{
-		$row = self::find_one_by(array('email' => $email, 'status' => St::VALID,));
-		if (empty($row))
-		{
-			return false;
-		}
-
-		if ($row->password != Auth::hash_password($password))
-		{
-			return false;
-		}
-
-		$row->last_login = System::now();
-		$row->save();
-
-		Session::create();
-		$close = !(boolean) $remember;
-		Session::set('expire_on_close', $close);
-		Session::set(self::$_table_name, $row);
-
-		return true;
-	}
-
-	public static function logout()
-	{
-		Session::delete(self::$_table_name);
+		return self::find($id);
 	}
 
 	public static function by_session()
@@ -60,45 +13,16 @@ class Model_User extends \Orm\Model
 		return Session::get(self::$_table_name);
 	}
 
-	public static function by_id($id)
-	{
-		return parent::find_by_pk($id);
-	}
-
-	public static function anew()
-	{
-		$row = parent::forge();
-		$row->created_at = System::now(); // TODO
-		return $row;
-	}
-
-	public function del_logical()
-	{
-		$row = parent::forge();
-		$row->deleted_at = System::now(); // TODO
-		if ($row->save() == 1)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public static function byTest()
-	{
-		$tmp = self::exec('select email from user where false');
-		return $tmp;
-	}
-
 	public static function unique_name($id, $name)
 	{
-		$list = self::exec('select id from user where name = :name', ['name' => $name]);
-		return count($list) == 0;
+		$count = self::query()->where('id', '<>', $id)->where('name', $name)->count();
+		return $count == 0;
 	}
 
 	public static function unique_email($id, $email)
 	{
-		$list = self::exec('select id from user where email = :email', ['email' => $email]);
-		return count($list) == 0;
+		$count = self::query()->where('id', '<>', $id)->where('email', $email)->count();
+		return $count == 0;
 	}
 
 	public static function count_by($c)
@@ -129,9 +53,15 @@ class Model_User extends \Orm\Model
 		/*
 		 * WHERE
 		 */
-		$p = [];
-		$sql .= ' where true ';
-		$sql .= ' and u.status = ' . St::VALID;
+		$p=[];
+		$sql .= ' where u.deleted_at is null ';
+
+		if (!empty($c['status']))
+		{
+			$sql .= ' and u.status in :status';
+			$p['status'] = $c['status'];
+		}
+
 		if (!empty($c['freeword']))
 		{
 			$sql.= ' and (false ';
@@ -166,8 +96,7 @@ class Model_User extends \Orm\Model
 
 		if ($count)
 		{
-			$res = self::exec($sql, $p);
-			return $res[0]['count'];
+			return parent::counta($sql, $p);
 		}
 		else
 		{
@@ -183,14 +112,60 @@ class Model_User extends \Orm\Model
 		'stamp' => ['updated_at-desc', '順'],
 	);
 
-	public function get_id()
+	public static function login($email, $password, $remember)
 	{
-		return $this->id;
+		$row = self::query()->where('email', $email)->where('status', St::VALID)->get_one();
+		if (empty($row))
+		{
+			return false;
+		}
+
+		if ($row->password != Auth::hash_password($password))
+		{
+			return false;
+		}
+
+		$row->last_login = System::now();
+		$row->save();
+
+		Session::create();
+		$close = !(boolean) $remember;
+		Session::set('expire_on_close', $close);
+		Session::set(self::$_table_name, $row);
+
+		return true;
 	}
 
-	public function get_email()
+	public static function logout()
 	{
-		return $this->email;
+		Session::delete(self::$_table_name);
 	}
+
+	protected static $_table_name = 'user';
+	protected static $_properties = array(
+		'id',
+		'name',
+		'email',
+		'password',
+		'status',
+		'last_login',
+		'created_at',
+		'updated_at',
+		'deleted_at',
+	);
+	protected static $_observers = array(
+		'Orm\Observer_CreatedAt' => array(
+			'events' => array('before_insert'),
+			'mysql_timestamp' => true,
+		),
+		'Orm\Observer_UpdatedAt' => array(
+			'events' => array('before_update'),
+			'mysql_timestamp' => true,
+		),
+	);
+	protected static $_soft_delete = array(
+		'deleted_field' => 'deleted_at',
+		'mysql_timestamp' => true,
+	);
 
 }

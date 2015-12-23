@@ -3,47 +3,60 @@
 class Controller_Api_Address extends Controller_Base_Api
 {
 
-	public function action_get_address($zipcode = null)
+	//use Controller_Base_Plugin_Auth;
+
+	public function action_update()
 	{
-		$list = Model_Address::by_zip($zipcode);
+		if (!$this->verify_csrf())
+		{
+			return;
+		}
+
+		$val = Validation::forge();
+		$val->add('name')->add_rule('required');
+		$val->add('email')->add_rule('required');
+		$val->add('message')->add_rule('required');
+		$d = $this->verify($val);
+		if (!$d)
+		{
+			return;
+		}
+
+		$user = Model_User::forge();
+		$user->name = $d['nickname'];
+		$user->email = $d['message'];
+		$user->status = St::VALID;
+		$user->save();
+		$this->_body = $user->id;
+
+		//DB::start_transaction();
+		//DB::commit_transaction();
+		//DB::rollback_transaction();
+	}
+
+	public function action_by_postcode($postcode)
+	{
+		$list = Model_Address::by_postcode($postcode);
 		if (empty($list))
 		{
 			$this->error(new Exception());
 		}
-		$this->response($list);
+		$this->_body = $list;
 	}
 
 	public function action_prefs()
 	{
-		//$list = Model_Address::get_prefs();
-		$list = ["北海道", "青森", "岩手", "秋田",];
-		if (empty($list))
-		{
-			$this->error(new Exception());
-		}
-		$this->response($list);
+		$this->_body = Model_Address::get_prefs();
 	}
 
-	public function action_cities($pref_code)
+	public function action_cities($pref_id)
 	{
-		//$list = Model_Address::get_cities($pref_code);
-		$list = ["川越市", "富士見市", "台東区", "墨田区",];
-		if (empty($list))
-		{
-			$this->error(new Exception());
-		}
-		$this->response($list);
+		$this->_body = Model_Address::get_cities($pref_id);
 	}
 
-	public function action_towns($city_code)
+	public function action_towns($city_id)
 	{
-		//$list = Model_Address::get_towns($city_code);
-		$list = ["笠幡", "ふじみ野東", "浅草橋",];
-		if (empty($list))
-		{
-			$this->error(new Exception());
-		}
-		$this->response($list);
+		$this->_body = Model_Address::get_towns($city_id);
 	}
 
 }
