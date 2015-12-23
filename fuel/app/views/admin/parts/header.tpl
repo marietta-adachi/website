@@ -1,6 +1,6 @@
 <div class="page-title">
 	<div class="title_left">
-		<h3>{$screen_name}<br/><small>{$breadcrumb}</small></h3>
+		<h3>{$screen_name}<br/><small>{*$breadcrumb*}</small></h3>
 	</div>
 
 	<!--div class="title_right">
