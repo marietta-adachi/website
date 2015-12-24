@@ -5,7 +5,7 @@
 	新しいパスワード（確認）：<input type="password" name="password_new_confirm" value="{$password_new_confirm|default:''}" maxlength="30" placeholder="確認のためもう一度入力してください"/>{$errors.password_new_confirm|default:''}<br/>
 	{$errors.other_password|default:''}
 	<br/>
-	<button type="submit" class="btn btn-primary btn-sizeFix" onclick="document.getElementById('ma_form').action = '{Uri::create("admin/setting/update/{SettingType::PASSWORD}")}';" class="button_theme">変更する</button>
+	<button type="submit" class="btn btn-primary btn-sizeFix" onclick="document.getElementById('ma_form').action = '{Uri::create("admin/setting/update/password")}';" class="button_theme">変更する</button>
 	
 	<hr/>
 	<h4>管理者メールアドレス</h4>
@@ -13,5 +13,5 @@
 	新しいメールアドレス（確認）：<input type="text" name="mail_address_new_confirm" value="{$mail_address_new_confirm|default:''}" maxlength="255" placeholder="確認のためもう一度入力してください"/>{$errors.mail_address_new_confirm|default:''}<br/>
 	{$errors.other_mail_address|default:''}
 	<br/>
-	<button type="submit" class="btn btn-primary btn-sizeFix" onclick="document.getElementById('ma_form').action = '{Uri::create("admin/setting/update/{SettingType::MAILADDRESS}")}';" class="button_theme">変更する</button>
+	<button type="submit" class="btn btn-primary btn-sizeFix" onclick="document.getElementById('ma_form').action = '{Uri::create("admin/setting/update/email")}';" class="button_theme">変更する</button>
 </form>

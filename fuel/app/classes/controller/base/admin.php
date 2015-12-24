@@ -13,10 +13,7 @@ class Controller_Base_Admin extends Controller_Base_Tpl
 
 		$user = $this->get_user();
 		$this->template->set_global('menu', View_Smarty::forge("admin/parts/menu", ['user' => $user]));
-		$this->template->set_global('top', View_Smarty::forge("admin/parts/top", ['user' => $user]));
 		$this->template->set_global('header', View_Smarty::forge("admin/parts/header", []));
-		$this->template->set_global('footer', View_Smarty::forge("admin/parts/footer", []));
-
 		
 		//Model_Log::write('admin', $user, $this->request->action);
 

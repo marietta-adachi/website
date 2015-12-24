@@ -22,7 +22,6 @@
 開発支援
 	plantUML
 	APIGEN
-	sqlgenのmysql対応
 
 
 http://runble1.com/fulephp-orm/
