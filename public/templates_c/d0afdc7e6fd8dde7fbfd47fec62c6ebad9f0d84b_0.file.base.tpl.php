@@ -1,17 +1,17 @@
 <?php
-/* Smarty version 3.1.28-dev/77, created on 2015-12-24 22:19:52
+/* Smarty version 3.1.28-dev/77, created on 2015-12-25 01:53:54
   from "D:\workspace\website\fuel\app\views\admin\base.tpl" */
 
 if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl, array (
   'has_nocache_code' => false,
   'version' => '3.1.28-dev/77',
-  'unifunc' => 'content_567bf0f8eab201_83516106',
+  'unifunc' => 'content_567c232226ba58_99503193',
   'file_dependency' => 
   array (
     'd0afdc7e6fd8dde7fbfd47fec62c6ebad9f0d84b' => 
     array (
       0 => 'D:\\workspace\\website\\fuel\\app\\views\\admin\\base.tpl',
-      1 => 1450963188,
+      1 => 1450976031,
       2 => 'file',
     ),
   ),
@@ -19,7 +19,7 @@ if ($_smarty_tpl->smarty->ext->_validateCompiled->decodeProperties($_smarty_tpl,
   array (
   ),
 ),false)) {
-function content_567bf0f8eab201_83516106 ($_smarty_tpl) {
+function content_567c232226ba58_99503193 ($_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -117,6 +117,10 @@ function content_567bf0f8eab201_83516106 ($_smarty_tpl) {
 					<?php echo $_smarty_tpl->tpl_vars['menu']->value;?>
 
 					<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+						<!--h1 class="page-header"><?php echo $_smarty_tpl->tpl_vars['screen_name']->value;?>
+</h1-->
+						<h2 class="sub-header"><?php echo $_smarty_tpl->tpl_vars['screen_name']->value;?>
+</h2>
 						<?php echo $_smarty_tpl->tpl_vars['content']->value;?>
 
 						<input type="hidden" id="message" value="<?php echo (($tmp = @$_smarty_tpl->tpl_vars['info']->value)===null||$tmp==='' ? '' : $tmp);?>
